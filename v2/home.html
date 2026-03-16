@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sakura Gaku - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-page="home">
+  <div class="bg-pattern"></div>
+  <div id="petals"></div>
+
+  <div class="app-container">
+    <div class="top-header">
+      <div class="header-title">桜学 Sakura Gaku</div>
+      <div class="header-actions">
+        <a class="icon-btn" href="dictionary.html"><i class="fas fa-search"></i></a>
+        <a class="icon-btn" href="settings.html"><i class="fas fa-cog"></i></a>
+      </div>
+    </div>
+
+    <div class="home-content">
+      <section class="hero-section">
+        <p class="welcome-user">Welcome back, <span id="userName">Learner</span>!</p>
+        <h1 class="hero-title">Continue Your Journey</h1>
+        <p class="hero-subtitle">Master Japanese through immersive vocabulary, cultural lessons, and practice</p>
+      </section>
+
+      <section class="stats-section">
+        <div class="stat-card">
+          <div class="stat-number" id="wordsLearned">24</div>
+          <div class="stat-label">Words Learned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="streakDays">7</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="quizScore">85%</div>
+          <div class="stat-label">Quiz Accuracy</div>
+        </div>
+      </section>
+
+      <section class="features-section">
+        <h2 class="section-title">Start Learning</h2>
+        <div class="feature-grid">
+          <a class="feature-card" href="vocabulary.html">
+            <div class="feature-icon"><i class="fas fa-language"></i></div>
+            <h3>Vocabulary Learning</h3>
+            <p>Master new words with interactive flashcards and spaced repetition</p>
+          </a>
+          <a class="feature-card" href="courses.html">
+            <div class="feature-icon"><i class="fas fa-torii-gate"></i></div>
+            <h3>Cultural Courses</h3>
+            <p>Explore Japanese traditions, customs, and cultural insights</p>
+          </a>
+          <a class="feature-card" href="quiz.html">
+            <div class="feature-icon"><i class="fas fa-clipboard-check"></i></div>
+            <h3>Practice Tests</h3>
+            <p>Test your knowledge with interactive quizzes and get instant feedback</p>
+          </a>
+          <a class="feature-card" href="translate.html">
+            <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
+            <h3>Phrase Translation</h3>
+            <p>Translate phrases instantly with AI-powered translations</p>
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <div class="nav-items">
+      <a class="nav-item" href="home.html">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a class="nav-item" href="vocabulary.html">
+        <i class="fas fa-book"></i>
+        <span>Learn</span>
+      </a>
+      <a class="nav-item" href="courses.html">
+        <i class="fas fa-torii-gate"></i>
+        <span>Culture</span>
+      </a>
+      <a class="nav-item" href="charts.html">
+        <i class="fas fa-chart-line"></i>
+        <span>Charts</span>
+      </a>
+      <a class="nav-item" href="translate.html">
+        <i class="fas fa-language"></i>
+        <span>Translate</span>
+      </a>
+      <a class="nav-item" href="forum.html">
+        <i class="fas fa-users"></i>
+        <span>Community</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

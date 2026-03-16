@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sakura Gaku - Dictionary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-page="dictionary">
+  <div class="bg-pattern"></div>
+  <div id="petals"></div>
+
+  <div class="app-container">
+    <div class="top-header">
+      <button class="back-btn" onclick="window.location.href='home.html'"><i class="fas fa-arrow-left"></i> Back</button>
+      <div class="header-title">Dictionary</div>
+    </div>
+
+    <div class="dictionary-container">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" id="dictSearch" placeholder="Search Japanese or English..." oninput="searchDictionary()" />
+      </div>
+      <div class="dict-results" id="dictResults"></div>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <div class="nav-items">
+      <a class="nav-item" href="home.html">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a class="nav-item" href="vocabulary.html">
+        <i class="fas fa-book"></i>
+        <span>Learn</span>
+      </a>
+      <a class="nav-item" href="courses.html">
+        <i class="fas fa-torii-gate"></i>
+        <span>Culture</span>
+      </a>
+      <a class="nav-item" href="charts.html">
+        <i class="fas fa-chart-line"></i>
+        <span>Charts</span>
+      </a>
+      <a class="nav-item" href="translate.html">
+        <i class="fas fa-language"></i>
+        <span>Translate</span>
+      </a>
+      <a class="nav-item" href="dictionary.html">
+        <i class="fas fa-search"></i>
+        <span>Dictionary</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
