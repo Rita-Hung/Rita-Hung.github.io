@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trends Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Japan Travel & Learn Japanese Trends</h1>
+    <canvas id="trendChart" width="800" height="400"></canvas>
+    <!-- Chart.js and script will be added next -->
+    <script>
+    // Helper function to parse CSV
+    function parseCSV(csv, delimiter = ',') {
+        const lines = csv.trim().split('\n');
+        const headers = lines[0].replace(/\r/, '').split(delimiter).map(h => h.replace(/"/g, ''));
+        const data = lines.slice(1).map(line => {
+            const values = line.replace(/\r/, '').split(delimiter);
+            const obj = {};
+            headers.forEach((header, i) => {
+                obj[header] = values[i].replace(/"/g, '');
+            });
+            return obj;
+        });
+        return data;
+    }
+
+    // Fetch and parse CSV, then render chart
+    fetch('time_series_HK_20240316-0000_20260316-1302.csv')
+        .then(response => response.text())
+        .then(csv => {
+            const chartData = parseCSV(csv);
+            const labels = chartData.map(row => row['Time']);
+            const japanTravel = chartData.map(row => Number(row['Japan travel']));
+            const learnJapanese = chartData.map(row => Number(row['learn Japanese']));
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Japan travel',
+                            data: japanTravel,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Learn Japanese',
+                            data: learnJapanese,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Japan Travel & Learn Japanese Trends Over Time'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Month'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Interest'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
