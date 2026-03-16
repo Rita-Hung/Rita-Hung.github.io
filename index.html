@@ -1903,6 +1903,8 @@
       e.preventDefault();
       const email = document.getElementById('loginEmail').value;
       currentUser = email.split('@')[0];
+      // Save to localStorage
+      localStorage.setItem('sakuraUser', currentUser);
       hideModal('loginModal');
       enterApp();
     }
@@ -1911,6 +1913,8 @@
       e.preventDefault();
       const name = document.getElementById('signupName').value;
       currentUser = name;
+      // Save to localStorage
+      localStorage.setItem('sakuraUser', currentUser);
       hideModal('signupModal');
       enterApp();
     }
@@ -1924,6 +1928,7 @@
 
     function logout() {
       currentUser = null;
+      localStorage.removeItem('sakuraUser');
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('launchScreen').classList.add('active');
       document.getElementById('navBar').classList.remove('active');
@@ -2259,7 +2264,13 @@
       `).join('');
     }
 
-    // Initialize
+    // Auto-login if user info is saved
+    const savedUser = localStorage.getItem('sakuraUser');
+    if (savedUser) {
+      currentUser = savedUser;
+      enterApp();
+    }
+
     updateCard();
   </script>
 </body>
