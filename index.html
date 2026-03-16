@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --sakura-pink: #FFB7C5;
@@ -1541,6 +1542,18 @@
       </div>
     </div>
 
+    <!-- Charts Screen -->
+    <div class="screen" id="chartsScreen">
+      <div class="top-header">
+        <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="header-title">Charts</div>
+      </div>
+      <div class="charts-container" id="chartsContainer">
+        <!-- Charts populated by JS -->
+         <canvas id="progressChart" style="max-width: 400px; margin: 0 auto;"></canvas>
+      </div>
+    </div>
+
     <!-- Translation Screen -->
     <div class="screen" id="translateScreen">
       <div class="top-header">
@@ -1684,6 +1697,10 @@
       <button class="nav-item" data-screen="courses" onclick="navigateTo('courses')">
         <i class="fas fa-torii-gate"></i>
         <span>Culture</span>
+      </button>
+      <button class="nav-item" data-screen="charts" onclick="navigateTo('charts')">
+        <i class="fas fa-chart-line"></i>
+        <span>Charts</span>
       </button>
       <button class="nav-item" data-screen="translate" onclick="navigateTo('translate')">
         <i class="fas fa-language"></i>
@@ -1855,6 +1872,7 @@
         'courses': 'coursesScreen',
         'courseDetail': 'courseDetailScreen',
         'quiz': 'quizScreen',
+        'charts': 'chartsScreen',
         'translate': 'translateScreen',
         'dictionary': 'dictionaryScreen',
         'settings': 'settingsScreen',
@@ -1871,6 +1889,7 @@
       if (screen === 'forum') renderForum();
       if (screen === 'dictionary') renderDictionary();
       if (screen === 'quiz') resetQuizSelection();
+      if (screen === 'charts') renderCharts();
     }
 
     // Modal functions
@@ -2165,6 +2184,52 @@
           </div>
         </div>
       `;
+    }
+
+    // Charts
+    let progressChartInstance = null;
+    function renderCharts() {
+      const ctx = document.getElementById('progressChart').getContext('2d');
+      if (progressChartInstance) {
+        progressChartInstance.destroy();
+      }
+      progressChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+          datasets: [{
+            label: 'Words Learned',
+            data: [5, 12, 20, 35, 50, 70],
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false            },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.parsed.y} words`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 10
+              }
+            }
+          }
+        }
+      });
     }
 
     // Translation
