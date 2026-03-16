@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>桜学 Sakura Gaku - Japanese Learning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --sakura-pink: #FFB7C5;
+      --sakura-dark: #E8909C;
+      --sakura-light: #FFF0F3;
+      --ink-black: #1a1a2e;
+      --ink-grey: #2d2d44;
+      --bamboo-green: #7BA17B;
+      --gold-accent: #D4AF37;
+      --cream: #FDF6E3;
+      --paper: #FAF7F2;
+      --text-primary: #1a1a2e;
+      --text-secondary: #555566;
+      --bg-primary: #FAF7F2;
+      --bg-secondary: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --shadow: rgba(26, 26, 46, 0.1);
+      --border: rgba(26, 26, 46, 0.1);
+    }
+
+    .dark {
+      --sakura-pink: #FFB7C5;
+      --sakura-dark: #CC8A94;
+      --sakura-light: #3d2a2e;
+      --ink-black: #E8E8F0;
+      --ink-grey: #B8B8C8;
+      --bamboo-green: #8FBC8F;
+      --gold-accent: #F0D060;
+      --cream: #1a1a2e;
+      --paper: #16162a;
+      --text-primary: #E8E8F0;
+      --text-secondary: #A0A0B0;
+      --bg-primary: #0f0f1a;
+      --bg-secondary: #1a1a2e;
+      --bg-card: #222238;
+      --shadow: rgba(0, 0, 0, 0.3);
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Decorative Background */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+      background-image:
+        radial-gradient(circle at 20% 80%, var(--sakura-pink) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, var(--sakura-light) 0%, transparent 40%),
+        radial-gradient(circle at 40% 40%, var(--bamboo-green) 0%, transparent 30%);
+      filter: blur(80px);
+    }
+
+    .dark .bg-pattern {
+      opacity: 0.15;
+    }
+
+    /* Cherry Blossom Petals Animation */
+    .petal {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: var(--sakura-pink);
+      border-radius: 50% 0 50% 50%;
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 1;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* App Container */
+    .app-container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Launch Screen */
+    .launch-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .logo-container {
+      margin-bottom: 40px;
+      animation: floatIn 1s ease;
+    }
+
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 10vw, 5rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--sakura-pink), var(--sakura-dark), var(--gold-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+    }
+
+    .logo-jp {
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+      color: var(--text-secondary);
+      letter-spacing: 0.5em;
+      margin-top: 10px;
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-top: 20px;
+      max-width: 400px;
+    }
+
+    .auth-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 50px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--sakura-pink), var(--sakura-dark));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(255, 183, 197, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(255, 183, 197, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--sakura-pink);
+      background: var(--sakura-light);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      animation: modalIn 0.3s ease;
+      box-shadow: 0 20px 60px var(--shadow);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .modal-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--text-primary);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      transition: border-color 0.3s;
+      font-family: inherit;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--sakura-pink);
+    }
+
+    /* Navigation */
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 10px 0;
+      z-index: 100;
+      display: none;
+    }
+
+    .nav-bar.active {
+      display: block;
+    }
+
+    .nav-items {
+      display: flex;
+      justify-content: space-around;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: color 0.3s;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    .nav-item i {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+    }
+
+    .nav-item.active, .nav-item:hover {
+      color: var(--sakura-dark);
+    }
+
+    /* Top Header */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+
+    .icon-btn:hover {
+      background: var(--sakura-light);
+      color: var(--sakura-dark);
+    }
+
+    /* Home Screen */
+    .home-content {
+      padding-bottom: 100px;
+    }
+
+    .hero-section {
+      position: relative;
+      padding: 60px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, var(--sakura-light), var(--bg-secondary));
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '桜';
+      position: absolute;
+      font-size: 15rem;
+      color: var(--sakura-pink);
+      opacity: 0.1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 6vw, 2.5rem);
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .welcome-user {
+      font-size: 1rem;
+      color: var(--sakura-dark);
+      margin-bottom: 10px;
+    }
+
+    /* Feature Cards */
+    .features-section {
+      padding: 40px 20px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border), transparent);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 30px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--sakura-pink), var(--gold-accent));
+      transform: scaleX(0);
+      transition: transform 0.4s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px var(--shadow);
+    }
+
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-card:nth-child(1) .feature-icon { background: linear-gradient(135deg, #FFB7C5, #E8909C); color: #fff; }
+    .feature-card:nth-child(2) .feature-icon { background: linear-gradient(135deg, #7BA17B, #5C8A5C); color: #fff; }
+    .feature-card:nth-child(3) .feature-icon { background: linear-gradient(135deg, #D4AF37, #B8972E); color: #fff; }
+    .feature-card:nth-child(4) .feature-icon { background: linear-gradient(135deg, #6B8DD6, #5577C2); color: #fff; }
+
+    .feature-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Stats Section */
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      padding: 0 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--sakura-dark);
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 5px;
+    }
+
+    /* Vocabulary Learning */
+    .vocab-container {
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .flashcard-container {
+      perspective: 1000px;
+      margin: 30px auto;
+      max-width: 400px;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 250px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      cursor: pointer;
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      box-shadow: 0 10px 40px var(--shadow);
+    }
+
+    .card-front {
+      background: linear-gradient(135deg, var(--sakura-light), var(--bg-card));
+      border: 2px solid var(--sakura-pink);
+    }
+
+    .card-back {
+      background: linear-gradient(135deg, var(--bamboo-green), #5C8A5C);
+      color: #fff;
+      transform: rotateY(180deg);
+    }
+
+    .card-word {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .card-reading {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+    }
+
+    .card-back .card-reading {
+      color: rgba(255,255,255,0.8);
+    }
+
+    .card-meaning {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .flashcard-controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .control-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .control-btn.wrong {
+      background: #FFE5E5;
+      color: #E74C3C;
+    }
+
+    .control-btn.correct {
+      background: #E5FFE5;
+      color: #27AE60;
+    }
+
+    .control-btn.next {
+      background: var(--sakura-light);
+      color: var(--sakura-dark);
+    }
+
+    .control-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sakura-pink), var(--gold-accent));
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    .vocab-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+
+    .vocab-stat {
+      text-align: center;
+    }
+
+    .vocab-stat-num {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .vocab-stat-num.correct { color: #27AE60; }
+    .vocab-stat-num.wrong { color: #E74C3C; }
+
+    /* Cultural Courses */
+    .courses-container {
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .course-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .course-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px var(--shadow);
+    }
+
+    .course-image {
+      height: 150px;
+      background: linear-gradient(135deg, var(--sakura-pink), var(--bamboo-green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .course-content {
+      padding: 20px;
+    }
+
+    .course-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--sakura-light);
+      color: var(--sakura-dark);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+
+    .course-title {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .course-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .course-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Course Detail View */
+    .course-detail {
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      color: var(--sakura-dark);
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-family: inherit;
+    }
+
+    .course-detail-content {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid var(--border);
+    }
+
+    .course-detail-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    .lesson-list {
+      margin-top: 30px;
+    }
+
+    .lesson-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .lesson-item:hover {
+      background: var(--sakura-light);
+    }
+
+    .lesson-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--sakura-pink);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-right: 15px;
+    }
+
+    .lesson-info h4 {
+      font-size: 1rem;
+      margin-bottom: 3px;
+    }
+
+    .lesson-info p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .lesson-status {
+      margin-left: auto;
+      color: #27AE60;
+    }
+
+    /* Practice Tests */
+    .quiz-container {
+      padding: 20px;
+      padding-bottom: 100px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .quiz-question-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .question-number {
+      color: var(--sakura-dark);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 1.3rem;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .question-jp {
+      font-size: 2.5rem;
+      text-align: center;
+      margin: 20px 0;
+      color: var(--text-primary);
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      padding: 16px 20px;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      text-align: left;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+      color: var(--text-primary);
+    }
+
+    .option-btn:hover {
+      border-color: var(--sakura-pink);
+      background: var(--sakura-light);
+    }
+
+    .option-btn.selected {
+      border-color: var(--sakura-dark);
+      background: var(--sakura-light);
+    }
+
+    .option-btn.correct {
+      border-color: #27AE60;
+      background: #E5FFE5;
+    }
+
+    .option-btn.incorrect {
+      border-color: #E74C3C;
+      background: #FFE5E5;
+    }
+
+    .quiz-result {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .result-score {
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--sakura-dark);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .result-message {
+      font-size: 1.5rem;
+      margin: 20px 0;
+    }
+
+    .feedback-box {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .feedback-box.correct {
+      background: #E5FFE5;
+      color: #27AE60;
+    }
+
+    .feedback-box.incorrect {
+      background: #FFE5E5;
+      color: #E74C3C;
+    }
+
+    /* Translation */
+    .translate-container {
+      padding: 20px;
+      padding-bottom: 100px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .translate-input-section {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 25px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .translate-input-section h3 {
+      margin-bottom: 15px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .translate-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 15px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      resize: vertical;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+
+    .translate-textarea:focus {
+      outline: none;
+      border-color: var(--sakura-pink);
+    }
+
+    .translate-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .char-count {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .translate-output {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 25px;
+      border: 1px solid var(--border);
+      min-height: 150px;
+    }
+
+    .translate-output h3 {
+      margin-bottom: 15px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .translation-result {
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+
+    .translation-loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+    }
+
+    .loading-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--sakura-pink);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Dictionary */
+    .dictionary-container {
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 18px 20px 18px 50px;
+      border: 2px solid var(--border);
+      border-radius: 50px;
+      font-size: 16px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--sakura-pink);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+    }
+
+    .dict-results {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .dict-entry {
+      background: var(--bg-card);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .dict-word {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .dict-reading {
+      color: var(--sakura-dark);
+      font-size: 1.1rem;
+      margin-top: 5px;
+    }
+
+    .dict-meaning {
+      margin-top: 10px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .dict-example {
+      margin-top: 15px;
+      padding: 15px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      font-style: italic;
+    }
+
+    /* Settings */
+    .settings-container {
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .settings-section {
+      background: var(--bg-card);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .settings-section h3 {
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+
+    .setting-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .setting-label i {
+      color: var(--sakura-dark);
+      font-size: 1.1rem;
+    }
+
+    /* Toggle Switch */
+    .toggle {
+      width: 50px;
+      height: 28px;
+      background: var(--border);
+      border-radius: 14px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle.active {
+      background: var(--sakura-pink);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .toggle.active::after {
+      transform: translateX(22px);
+    }
+
+    .logout-btn {
+      width: 100%;
+      padding: 15px;
+      background: #FFE5E5;
+      color: #E74C3C;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    .logout-btn:hover {
+      background: #E74C3C;
+      color: #fff;
+    }
+
+    /* Forum */
+    .forum-container {
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .forum-post {
+      background: var(--bg-card);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .post-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sakura-pink), var(--gold-accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .post-author {
+      font-weight: 600;
+    }
+
+    .post-time {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .post-content {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 20px;
+    }
+
+    .post-action {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    .post-action:hover {
+      color: var(--sakura-dark);
+    }
+
+    /* Custom Alert/Confirm Modals */
+    .alert-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-card);
+      padding: 30px;
+      border-radius: 20px;
+      z-index: 2000;
+      max-width: 350px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px var(--shadow);
+    }
+
+    .alert-modal h3 {
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    .alert-modal p {
+      color: var(--text-secondary);
+      margin-bottom: 25px;
+    }
+
+    .alert-modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    /* Quiz Selection */
+    .quiz-select {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .quiz-type-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .quiz-type-card:hover {
+      border-color: var(--sakura-pink);
+      transform: translateY(-3px);
+    }
+
+    .quiz-type-card i {
+      font-size: 2.5rem;
+      color: var(--sakura-dark);
+      margin-bottom: 15px;
+    }
+
+    .quiz-type-card h3 {
+      margin-bottom: 10px;
+    }
+
+    .quiz-type-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-section {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-section {
+        padding: 40px 20px;
+      }
+
+      .modal {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+
+  <!-- Cherry Blossom Petals -->
+  <div id="petals"></div>
+
+  <div class="app-container">
+    <!-- Launch Screen -->
+    <div class="screen active" id="launchScreen">
+      <div class="launch-screen">
+        <div class="logo-container">
+          <div class="logo">Sakura Gaku</div>
+          <div class="logo-jp">桜学</div>
+        </div>
+        <p class="tagline">Begin your journey into Japanese language and culture</p>
+        <div class="auth-buttons">
+          <button class="btn btn-primary" onclick="showModal('loginModal')">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+          <button class="btn btn-secondary" onclick="showModal('signupModal')">
+            <i class="fas fa-user-plus"></i> Sign Up
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home Screen -->
+    <div class="screen" id="homeScreen">
+      <div class="top-header">
+        <div class="header-title">桜学 Sakura Gaku</div>
+        <div class="header-actions">
+          <button class="icon-btn" onclick="navigateTo('dictionary')"><i class="fas fa-search"></i></button>
+          <button class="icon-btn" onclick="navigateTo('settings')"><i class="fas fa-cog"></i></button>
+        </div>
+      </div>
+      <div class="home-content">
+        <section class="hero-section">
+          <p class="welcome-user">Welcome back, <span id="userName">Learner</span>!</p>
+          <h1 class="hero-title">Continue Your Journey</h1>
+          <p class="hero-subtitle">Master Japanese through immersive vocabulary, cultural lessons, and practice</p>
+        </section>
+
+        <section class="stats-section">
+          <div class="stat-card">
+            <div class="stat-number" id="wordsLearned">24</div>
+            <div class="stat-label">Words Learned</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="streakDays">7</div>
+            <div class="stat-label">Day Streak</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="quizScore">85%</div>
+            <div class="stat-label">Quiz Accuracy</div>
+          </div>
+        </section>
+
+        <section class="features-section">
+          <h2 class="section-title">Start Learning</h2>
+          <div class="feature-grid">
+            <div class="feature-card" onclick="navigateTo('vocabulary')">
+              <div class="feature-icon"><i class="fas fa-language"></i></div>
+              <h3>Vocabulary Learning</h3>
+              <p>Master new words with interactive flashcards and spaced repetition</p>
+            </div>
+            <div class="feature-card" onclick="navigateTo('courses')">
+              <div class="feature-icon"><i class="fas fa-torii-gate"></i></div>
+              <h3>Cultural Courses</h3>
+              <p>Explore Japanese traditions, customs, and cultural insights</p>
+            </div>
+            <div class="feature-card" onclick="navigateTo('quiz')">
+              <div class="feature-icon"><i class="fas fa-clipboard-check"></i></div>
+              <h3>Practice Tests</h3>
+              <p>Test your knowledge with interactive quizzes and get instant feedback</p>
+            </div>
+            <div class="feature-card" onclick="navigateTo('translate')">
+              <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
+              <h3>Phrase Translation</h3>
+              <p>Translate phrases instantly with AI-powered translations</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Vocabulary Screen -->
+    <div class="screen" id="vocabScreen">
+      <div class="top-header">
+        <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="header-title">Vocabulary</div>
+      </div>
+      <div class="vocab-container">
+        <div class="vocab-stats">
+          <div class="vocab-stat">
+            <div class="vocab-stat-num correct" id="correctCount">0</div>
+            <div>Correct</div>
+          </div>
+          <div class="vocab-stat">
+            <div class="vocab-stat-num wrong" id="wrongCount">0</div>
+            <div>Wrong</div>
+          </div>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-fill" id="vocabProgress" style="width: 0%"></div>
+        </div>
+
+        <div class="flashcard-container">
+          <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="card-face card-front">
+              <div class="card-word" id="cardWord">日本語</div>
+              <div class="card-reading" id="cardReading">にほんご</div>
+              <p style="margin-top: 20px; color: var(--text-secondary); font-size: 0.9rem;">Tap to reveal meaning</p>
+            </div>
+            <div class="card-face card-back">
+              <div class="card-meaning" id="cardMeaning">Japanese language</div>
+              <div class="card-reading" id="cardExample">Example: 日本語を勉強しています</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcard-controls">
+          <button class="control-btn wrong" onclick="markCard(false)"><i class="fas fa-times"></i></button>
+          <button class="control-btn next" onclick="nextCard()"><i class="fas fa-redo"></i></button>
+          <button class="control-btn correct" onclick="markCard(true)"><i class="fas fa-check"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Courses Screen -->
+    <div class="screen" id="coursesScreen">
+      <div class="top-header">
+        <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="header-title">Cultural Courses</div>
+      </div>
+      <div class="courses-container" id="coursesList">
+        <!-- Courses populated by JS -->
+      </div>
+    </div>
+
+    <!-- Course Detail Screen -->
+    <div class="screen" id="courseDetailScreen">
+      <div class="top-header">
+        <button class="back-btn" onclick="navigateTo('courses')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="header-title">Course Details</div>
+      </div>
+      <div class="course-detail" id="courseDetail">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div class="screen" id="quizScreen">
+      <div class="top-header">
+        <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="header-title">Practice Tests</div>
+      </div>
+      <div class="quiz-container" id="quizContainer">
+        <div class="quiz-header">
+          <h2>Choose Your Quiz</h2>
+          <p style="color: var(--text-secondary);">Test your Japanese knowledge</p>
+        </div>
+        <div class="quiz-select">
+          <div class="quiz-type-card" onclick="startQuiz('vocabulary')">
+            <i class="fas fa-spell-check"></i>
+            <h3>Vocabulary Quiz</h3>
+            <p>Match Japanese words with meanings</p>
+          </div>
+          <div class="quiz-type-card" onclick="startQuiz('hiragana')">
+            <i class="fas fa-font"></i>
+            <h3>Hiragana Quiz</h3>
+            <p>Test your hiragana reading skills</p>
+          </div>
+          <div class="quiz-type-card" onclick="startQuiz('culture')">
+            <i class="fas fa-landmark"></i>
+            <h3>Culture Quiz</h3>
+            <p>Japanese culture and traditions</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Translation Screen -->
+    <div class="screen" id="translateScreen">
+      <div class="top-header">
+        <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="header-title">Phrase Translation</div>
+      </div>
+      <div class="translate-container">
+        <div class="translate-input-section">
+          <h3><i class="fas fa-pen"></i> Enter text to translate</h3>
+          <textarea class="translate-textarea" id="translateInput" placeholder="Type English or Japanese text here..." oninput="updateCharCount()"></textarea>
+          <div class="translate-actions">
+            <span class="char-count"><span id="charCount">0</span>/500</span>
+            <button class="btn btn-primary" onclick="translateText()">
+              <i class="fas fa-language"></i> Translate
+            </button>
+          </div>
+        </div>
+        <div class="translate-output">
+          <h3><i class="fas fa-comment-dots"></i> Translation</h3>
+          <div class="translation-result" id="translationResult">
+            <p style="color: var(--text-secondary);">Your translation will appear here...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dictionary Screen -->
+    <div class="screen" id="dictionaryScreen">
+      <div class="top-header">
+        <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="header-title">Dictionary</div>
+      </div>
+      <div class="dictionary-container">
+        <div class="search-box">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" id="dictSearch" placeholder="Search Japanese or English..." oninput="searchDictionary()">
+        </div>
+        <div class="dict-results" id="dictResults">
+          <!-- Results populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div class="screen" id="settingsScreen">
+      <div class="top-header">
+        <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="header-title">Settings</div>
+      </div>
+      <div class="settings-container">
+        <div class="settings-section">
+          <h3>Preferences</h3>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-moon"></i>
+              <span>Dark Mode</span>
+            </div>
+            <div class="toggle" id="darkModeToggle" onclick="toggleDarkMode()"></div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-bell"></i>
+              <span>Notifications</span>
+            </div>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-volume-up"></i>
+              <span>Sound Effects</span>
+            </div>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Learning</h3>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-graduation-cap"></i>
+              <span>Daily Goal</span>
+            </div>
+            <span style="color: var(--sakura-dark)">10 words</span>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-brain"></i>
+              <span>Difficulty</span>
+            </div>
+            <span style="color: var(--sakura-dark)">Beginner</span>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Account</h3>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-user"></i>
+              <span>Profile</span>
+            </div>
+            <i class="fas fa-chevron-right" style="color: var(--text-secondary)"></i>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-shield-alt"></i>
+              <span>Privacy</span>
+            </div>
+            <i class="fas fa-chevron-right" style="color: var(--text-secondary)"></i>
+          </div>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Log Out
+        </button>
+      </div>
+    </div>
+
+    <!-- Forum Screen -->
+    <div class="screen" id="forumScreen">
+      <div class="top-header">
+        <button class="back-btn" onclick="navigateTo('home')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="header-title">Community</div>
+      </div>
+      <div class="forum-container" id="forumPosts">
+        <!-- Posts populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="nav-bar" id="navBar">
+    <div class="nav-items">
+      <button class="nav-item active" data-screen="home" onclick="navigateTo('home')">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" data-screen="vocabulary" onclick="navigateTo('vocabulary')">
+        <i class="fas fa-book"></i>
+        <span>Learn</span>
+      </button>
+      <button class="nav-item" data-screen="courses" onclick="navigateTo('courses')">
+        <i class="fas fa-torii-gate"></i>
+        <span>Culture</span>
+      </button>
+      <button class="nav-item" data-screen="translate" onclick="navigateTo('translate')">
+        <i class="fas fa-language"></i>
+        <span>Translate</span>
+      </button>
+      <button class="nav-item" data-screen="forum" onclick="navigateTo('forum')">
+        <i class="fas fa-users"></i>
+        <span>Community</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Login Modal -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal" style="position: relative;">
+      <button class="modal-close" onclick="hideModal('loginModal')">&times;</button>
+      <div class="modal-header">
+        <h2>Welcome Back</h2>
+        <p style="color: var(--text-secondary); margin-top: 5px;">Login to continue learning</p>
+      </div>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div class="modal-overlay" id="signupModal">
+    <div class="modal" style="position: relative;">
+      <button class="modal-close" onclick="hideModal('signupModal')">&times;</button>
+      <div class="modal-header">
+        <h2>Create Account</h2>
+        <p style="color: var(--text-secondary); margin-top: 5px;">Start your Japanese journey</p>
+      </div>
+      <form onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="signupName" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="signupEmail" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="signupPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Sign Up</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Dark mode detection
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      if (event.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    });
+
+    // Create falling petals
+    function createPetals() {
+      const container = document.getElementById('petals');
+      for (let i = 0; i < 15; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        petal.style.left = Math.random() * 100 + '%';
+        petal.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        petal.style.animationDelay = (Math.random() * 10) + 's';
+        petal.style.width = (Math.random() * 8 + 8) + 'px';
+        petal.style.height = petal.style.width;
+        container.appendChild(petal);
+      }
+    }
+    createPetals();
+
+    // App State
+    let currentUser = null;
+    let currentCardIndex = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let quizState = { current: 0, score: 0, type: null, questions: [] };
+
+    // Vocabulary Data
+    const vocabulary = [
+      { word: '日本語', reading: 'にほんご', meaning: 'Japanese language', example: '日本語を勉強しています。' },
+      { word: '桜', reading: 'さくら', meaning: 'Cherry blossom', example: '桜がきれいですね。' },
+      { word: '食べる', reading: 'たべる', meaning: 'To eat', example: '朝ごはんを食べます。' },
+      { word: '飲む', reading: 'のむ', meaning: 'To drink', example: 'お茶を飲みましょう。' },
+      { word: '学校', reading: 'がっこう', meaning: 'School', example: '学校に行きます。' },
+      { word: '友達', reading: 'ともだち', meaning: 'Friend', example: '友達と遊びます。' },
+      { word: '本', reading: 'ほん', meaning: 'Book', example: '本を読むのが好きです。' },
+      { word: '音楽', reading: 'おんがく', meaning: 'Music', example: '音楽を聴いています。' },
+      { word: '山', reading: 'やま', meaning: 'Mountain', example: '富士山は美しいです。' },
+      { word: '海', reading: 'うみ', meaning: 'Sea/Ocean', example: '海で泳ぎたいです。' },
+    ];
+
+    // Courses Data
+    const courses = [
+      { id: 1, title: 'Japanese Tea Ceremony', tag: 'Tradition', desc: 'Explore the art and philosophy behind the traditional Japanese tea ceremony (茶道).', icon: '🍵', lessons: 5 },
+      { id: 2, title: 'Samurai & Bushido', tag: 'History', desc: 'Learn about the warrior class of feudal Japan and their code of honor.', icon: '⚔️', lessons: 8 },
+      { id: 3, title: 'Japanese Festivals', tag: 'Culture', desc: 'Discover the colorful festivals (matsuri) celebrated throughout Japan.', icon: '🎆', lessons: 6 },
+      { id: 4, title: 'Zen & Buddhism', tag: 'Philosophy', desc: 'Understanding the influence of Zen Buddhism on Japanese culture.', icon: '🧘', lessons: 7 },
+      { id: 5, title: 'Japanese Cuisine', tag: 'Food', desc: 'From sushi to ramen: explore the world of Japanese culinary arts.', icon: '🍱', lessons: 10 },
+    ];
+
+    // Quiz Questions
+    const quizData = {
+      vocabulary: [
+        { question: 'What does this word mean?', jp: '桜', options: ['Cherry blossom', 'Mountain', 'River', 'Tree'], correct: 0 },
+        { question: 'What does this word mean?', jp: '友達', options: ['Family', 'Teacher', 'Friend', 'Student'], correct: 2 },
+        { question: 'What does this word mean?', jp: '食べる', options: ['To sleep', 'To eat', 'To drink', 'To walk'], correct: 1 },
+        { question: 'What does this word mean?', jp: '本', options: ['Pen', 'Paper', 'Book', 'Desk'], correct: 2 },
+        { question: 'What does this word mean?', jp: '海', options: ['Mountain', 'River', 'Lake', 'Sea'], correct: 3 },
+      ],
+      hiragana: [
+        { question: 'How do you read this?', jp: 'あ', options: ['ka', 'a', 'i', 'u'], correct: 1 },
+        { question: 'How do you read this?', jp: 'さ', options: ['ta', 'na', 'sa', 'ha'], correct: 2 },
+        { question: 'How do you read this?', jp: 'に', options: ['ni', 'nu', 'ne', 'no'], correct: 0 },
+        { question: 'How do you read this?', jp: 'ほ', options: ['ha', 'hi', 'fu', 'ho'], correct: 3 },
+        { question: 'How do you read this?', jp: 'め', options: ['ma', 'mi', 'mu', 'me'], correct: 3 },
+      ],
+      culture: [
+        { question: 'What is the traditional Japanese tea ceremony called?', jp: '🍵', options: ['Ikebana', 'Sadō', 'Origami', 'Kabuki'], correct: 1 },
+        { question: 'What is the Japanese art of flower arrangement?', jp: '🌸', options: ['Bonsai', 'Ikebana', 'Shodo', 'Kendo'], correct: 1 },
+        { question: 'What is the code of the samurai called?', jp: '⚔️', options: ['Judo', 'Karate', 'Bushido', 'Aikido'], correct: 2 },
+        { question: 'What is the Japanese New Year celebration called?', jp: '🎍', options: ['Hanami', 'Shōgatsu', 'Obon', 'Tanabata'], correct: 1 },
+        { question: 'What mountain is the symbol of Japan?', jp: '🗻', options: ['Mt. Aso', 'Mt. Fuji', 'Mt. Hakone', 'Mt. Takao'], correct: 1 },
+      ]
+    };
+
+    // Forum Posts Data
+    const forumPosts = [
+      { author: 'Sakura_Fan', avatar: 'S', time: '2 hours ago', content: 'Just finished my first week of learning hiragana! Any tips for memorizing faster? 頑張ります！', likes: 24, comments: 8 },
+      { author: 'TokyoDreamer', avatar: 'T', time: '5 hours ago', content: 'Visited Kyoto last month and the temples were absolutely breathtaking. Can\'t wait to go back! 🏯', likes: 56, comments: 12 },
+      { author: 'NihongoLearner', avatar: 'N', time: '1 day ago', content: 'Does anyone have recommendations for Japanese podcasts for beginners? Looking for listening practice.', likes: 31, comments: 15 },
+    ];
+
+    // Dictionary Data
+    const dictionary = [
+      { word: '愛', reading: 'あい (ai)', meaning: 'Love', example: '愛している - I love you' },
+      { word: '美しい', reading: 'うつくしい (utsukushii)', meaning: 'Beautiful', example: '美しい景色 - Beautiful scenery' },
+      { word: '勉強', reading: 'べんきょう (benkyou)', meaning: 'Study', example: '日本語を勉強する - To study Japanese' },
+      { word: '元気', reading: 'げんき (genki)', meaning: 'Healthy, energetic', example: 'お元気ですか？ - How are you?' },
+      { word: '嬉しい', reading: 'うれしい (ureshii)', meaning: 'Happy, glad', example: 'とても嬉しいです - I am very happy' },
+    ];
+
+    // Navigation
+    function navigateTo(screen) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      const screenMap = {
+        'home': 'homeScreen',
+        'vocabulary': 'vocabScreen',
+        'courses': 'coursesScreen',
+        'courseDetail': 'courseDetailScreen',
+        'quiz': 'quizScreen',
+        'translate': 'translateScreen',
+        'dictionary': 'dictionaryScreen',
+        'settings': 'settingsScreen',
+        'forum': 'forumScreen'
+      };
+
+      document.getElementById(screenMap[screen]).classList.add('active');
+
+      const navItem = document.querySelector(`.nav-item[data-screen="${screen}"]`);
+      if (navItem) navItem.classList.add('active');
+
+      // Initialize screen-specific content
+      if (screen === 'courses') renderCourses();
+      if (screen === 'forum') renderForum();
+      if (screen === 'dictionary') renderDictionary();
+      if (screen === 'quiz') resetQuizSelection();
+    }
+
+    // Modal functions
+    function showModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function hideModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Custom alert function
+    function showAlert(title, message, callback) {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay active';
+      overlay.innerHTML = `
+        <div class="alert-modal">
+          <h3>${title}</h3>
+          <p>${message}</p>
+          <div class="alert-modal-buttons">
+            <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove(); ${callback ? callback + '()' : ''}">OK</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+    }
+
+    // Auth handlers
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      currentUser = email.split('@')[0];
+      hideModal('loginModal');
+      enterApp();
+    }
+
+    function handleSignup(e) {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value;
+      currentUser = name;
+      hideModal('signupModal');
+      enterApp();
+    }
+
+    function enterApp() {
+      document.getElementById('launchScreen').classList.remove('active');
+      document.getElementById('homeScreen').classList.add('active');
+      document.getElementById('navBar').classList.add('active');
+      document.getElementById('userName').textContent = currentUser;
+    }
+
+    function logout() {
+      currentUser = null;
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('launchScreen').classList.add('active');
+      document.getElementById('navBar').classList.remove('active');
+    }
+
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+      document.getElementById('darkModeToggle').classList.toggle('active');
+    }
+
+    // Update dark mode toggle on load
+    if (document.documentElement.classList.contains('dark')) {
+      document.getElementById('darkModeToggle').classList.add('active');
+    }
+
+    // Flashcard functions
+    function flipCard() {
+      document.getElementById('flashcard').classList.toggle('flipped');
+    }
+
+    function updateCard() {
+      const card = vocabulary[currentCardIndex];
+      document.getElementById('cardWord').textContent = card.word;
+      document.getElementById('cardReading').textContent = card.reading;
+      document.getElementById('cardMeaning').textContent = card.meaning;
+      document.getElementById('cardExample').textContent = card.example;
+      document.getElementById('flashcard').classList.remove('flipped');
+
+      const progress = ((currentCardIndex + 1) / vocabulary.length) * 100;
+      document.getElementById('vocabProgress').style.width = progress + '%';
+    }
+
+    function markCard(isCorrect) {
+      if (isCorrect) {
+        correctCount++;
+        document.getElementById('correctCount').textContent = correctCount;
+      } else {
+        wrongCount++;
+        document.getElementById('wrongCount').textContent = wrongCount;
+      }
+      nextCard();
+    }
+
+    function nextCard() {
+      currentCardIndex = (currentCardIndex + 1) % vocabulary.length;
+      updateCard();
+    }
+
+    // Courses
+    function renderCourses() {
+      const container = document.getElementById('coursesList');
+      container.innerHTML = courses.map(course => `
+        <div class="course-card" onclick="openCourse(${course.id})">
+          <div class="course-image">${course.icon}</div>
+          <div class="course-content">
+            <span class="course-tag">${course.tag}</span>
+            <h3 class="course-title">${course.title}</h3>
+            <p class="course-desc">${course.desc}</p>
+            <div class="course-meta">
+              <span><i class="fas fa-book-open"></i> ${course.lessons} lessons</span>
+              <span><i class="fas fa-clock"></i> ~${course.lessons * 10} min</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCourse(id) {
+      const course = courses.find(c => c.id === id);
+      const detail = document.getElementById('courseDetail');
+
+      let lessonsHTML = '';
+      for (let i = 1; i <= course.lessons; i++) {
+        const completed = i <= 2;
+        lessonsHTML += `
+          <div class="lesson-item">
+            <div class="lesson-number">${i}</div>
+            <div class="lesson-info">
+              <h4>Lesson ${i}: ${getLessonTitle(course.title, i)}</h4>
+              <p>${completed ? 'Completed' : 'Not started'}</p>
+            </div>
+            ${completed ? '<i class="fas fa-check-circle lesson-status"></i>' : ''}
+          </div>
+        `;
+      }
+
+      detail.innerHTML = `
+        <button class="back-btn" onclick="navigateTo('courses')"><i class="fas fa-arrow-left"></i> Back to Courses</button>
+        <div class="course-detail-content">
+          <h2>${course.icon} ${course.title}</h2>
+          <p style="color: var(--text-secondary); line-height: 1.6;">${course.desc}</p>
+          <div class="progress-bar" style="margin-top: 20px;">
+            <div class="progress-fill" style="width: ${(2 / course.lessons) * 100}%"></div>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 10px;">2 of ${course.lessons} lessons completed</p>
+          <div class="lesson-list">
+            ${lessonsHTML}
+          </div>
+        </div>
+      `;
+
+      navigateTo('courseDetail');
+    }
+
+    function getLessonTitle(courseTitle, lessonNum) {
+      const titles = {
+        'Japanese Tea Ceremony': ['Introduction to Chado', 'History & Origins', 'Tea Utensils', 'The Ceremony Steps', 'Philosophy of Tea'],
+        'Samurai & Bushido': ['Who Were the Samurai?', 'Feudal Japan', 'The Bushido Code', 'Famous Samurai', 'Weapons & Armor', 'Decline of Samurai', 'Legacy Today', 'Samurai in Media'],
+        'Japanese Festivals': ['Introduction to Matsuri', 'Spring Festivals', 'Summer Festivals', 'Autumn Festivals', 'Winter Festivals', 'Regional Festivals'],
+        'Zen & Buddhism': ['Buddhism in Japan', 'Zen Philosophy', 'Zen Temples', 'Meditation Practices', 'Zen Gardens', 'Zen Arts', 'Modern Zen'],
+        'Japanese Cuisine': ['Introduction', 'Sushi', 'Ramen', 'Tempura', 'Japanese Breakfast', 'Bento Culture', 'Tea & Sweets', 'Regional Cuisine', 'Seasonal Foods', 'Dining Etiquette'],
+      };
+      return titles[courseTitle]?.[lessonNum - 1] || `Part ${lessonNum}`;
+    }
+
+    // Quiz
+    function resetQuizSelection() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = `
+        <div class="quiz-header">
+          <h2>Choose Your Quiz</h2>
+          <p style="color: var(--text-secondary);">Test your Japanese knowledge</p>
+        </div>
+        <div class="quiz-select">
+          <div class="quiz-type-card" onclick="startQuiz('vocabulary')">
+            <i class="fas fa-spell-check"></i>
+            <h3>Vocabulary Quiz</h3>
+            <p>Match Japanese words with meanings</p>
+          </div>
+          <div class="quiz-type-card" onclick="startQuiz('hiragana')">
+            <i class="fas fa-font"></i>
+            <h3>Hiragana Quiz</h3>
+            <p>Test your hiragana reading skills</p>
+          </div>
+          <div class="quiz-type-card" onclick="startQuiz('culture')">
+            <i class="fas fa-landmark"></i>
+            <h3>Culture Quiz</h3>
+            <p>Japanese culture and traditions</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function startQuiz(type) {
+      quizState = {
+        current: 0,
+        score: 0,
+        type: type,
+        questions: [...quizData[type]].sort(() => Math.random() - 0.5).slice(0, 5)
+      };
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const container = document.getElementById('quizContainer');
+      const q = quizState.questions[quizState.current];
+
+      container.innerHTML = `
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${((quizState.current) / quizState.questions.length) * 100}%"></div>
+        </div>
+        <div class="quiz-question-card">
+          <p class="question-number">Question ${quizState.current + 1} of ${quizState.questions.length}</p>
+          <p class="question-text">${q.question}</p>
+          <p class="question-jp">${q.jp}</p>
+          <div class="options-list">
+            ${q.options.map((opt, i) => `
+              <button class="option-btn" onclick="selectAnswer(${i})">${opt}</button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function selectAnswer(index) {
+      const q = quizState.questions[quizState.current];
+      const buttons = document.querySelectorAll('.option-btn');
+
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.correct) {
+          btn.classList.add('correct');
+        } else if (i === index && i !== q.correct) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      if (index === q.correct) {
+        quizState.score++;
+      }
+
+      const container = document.getElementById('quizContainer');
+      const feedbackDiv = document.createElement('div');
+      feedbackDiv.className = `feedback-box ${index === q.correct ? 'correct' : 'incorrect'}`;
+      feedbackDiv.innerHTML = index === q.correct ?
+        '<i class="fas fa-check-circle"></i> Correct!' :
+        `<i class="fas fa-times-circle"></i> Incorrect. The answer was: ${q.options[q.correct]}`;
+      container.querySelector('.quiz-question-card').appendChild(feedbackDiv);
+
+      setTimeout(() => {
+        quizState.current++;
+        if (quizState.current < quizState.questions.length) {
+          renderQuestion();
+        } else {
+          showQuizResult();
+        }
+      }, 1500);
+    }
+
+    function showQuizResult() {
+      const percentage = Math.round((quizState.score / quizState.questions.length) * 100);
+      const container = document.getElementById('quizContainer');
+
+      let message = '';
+      if (percentage === 100) message = 'Perfect! 素晴らしい！';
+      else if (percentage >= 80) message = 'Great job! よくできました！';
+      else if (percentage >= 60) message = 'Good effort! がんばりましょう！';
+      else message = 'Keep practicing! 練習あるのみ！';
+
+      container.innerHTML = `
+        <div class="quiz-question-card quiz-result">
+          <h2 style="margin-bottom: 20px;">Quiz Complete!</h2>
+          <div class="result-score">${percentage}%</div>
+          <p class="result-message">${message}</p>
+          <p style="color: var(--text-secondary); margin-bottom: 30px;">You got ${quizState.score} out of ${quizState.questions.length} correct</p>
+          <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="startQuiz('${quizState.type}')">
+              <i class="fas fa-redo"></i> Try Again
+            </button>
+            <button class="btn btn-primary" onclick="resetQuizSelection()">
+              <i class="fas fa-list"></i> Other Quizzes
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Translation
+    function updateCharCount() {
+      const text = document.getElementById('translateInput').value;
+      document.getElementById('charCount').textContent = text.length;
+    }
+
+    async function translateText() {
+      const text = document.getElementById('translateInput').value.trim();
+      if (!text) {
+        showAlert('Empty Input', 'Please enter some text to translate.');
+        return;
+      }
+
+      const resultDiv = document.getElementById('translationResult');
+      resultDiv.innerHTML = '<div class="translation-loading"><div class="loading-spinner"></div>Translating...</div>';
+
+      try {
+        // Register handler for translation
+        window.Poe.registerHandler('translate-handler', (result) => {
+          const msg = result.responses[0];
+          if (msg.status === 'error') {
+            resultDiv.innerHTML = `<p style="color: #E74C3C;">Error: ${msg.statusText || 'Translation failed'}</p>`;
+          } else if (msg.status === 'incomplete') {
+            resultDiv.innerHTML = `<div class="translation-result">${marked.parse(msg.content)}</div>`;
+          } else if (msg.status === 'complete') {
+            resultDiv.innerHTML = `<div class="translation-result">${marked.parse(msg.content)}</div>`;
+          }
+        });
+
+        await window.Poe.sendUserMessage(
+          `@GPT-5.1 You are a Japanese-English translator. Translate the following text. If it's English, translate to Japanese (with romaji). If it's Japanese, translate to English. Provide the translation and a brief note about any nuances. Keep response concise.\n\nText: "${text}"`,
+          {
+            handler: 'translate-handler',
+            stream: true,
+            openChat: false
+          }
+        );
+      } catch (err) {
+        resultDiv.innerHTML = `<p style="color: #E74C3C;">Error: ${err.message || 'Translation service unavailable'}</p>`;
+      }
+    }
+
+    // Dictionary
+    function renderDictionary(filter = '') {
+      const container = document.getElementById('dictResults');
+      const filtered = filter ?
+        dictionary.filter(d =>
+          d.word.includes(filter) ||
+          d.reading.toLowerCase().includes(filter.toLowerCase()) ||
+          d.meaning.toLowerCase().includes(filter.toLowerCase())
+        ) : dictionary;
+
+      container.innerHTML = filtered.map(entry => `
+        <div class="dict-entry">
+          <div class="dict-word">${entry.word}</div>
+          <div class="dict-reading">${entry.reading}</div>
+          <div class="dict-meaning">${entry.meaning}</div>
+          <div class="dict-example">${entry.example}</div>
+        </div>
+      `).join('');
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 40px;">No results found</p>';
+      }
+    }
+
+    function searchDictionary() {
+      const query = document.getElementById('dictSearch').value;
+      renderDictionary(query);
+    }
+
+    // Forum
+    function renderForum() {
+      const container = document.getElementById('forumPosts');
+      container.innerHTML = `
+        <button class="btn btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="showAlert('Coming Soon', 'Post creation will be available soon!')">
+          <i class="fas fa-plus"></i> Create New Post
+        </button>
+      ` + forumPosts.map(post => `
+        <div class="forum-post">
+          <div class="post-header">
+            <div class="post-avatar">${post.avatar}</div>
+            <div>
+              <div class="post-author">${post.author}</div>
+              <div class="post-time">${post.time}</div>
+            </div>
+          </div>
+          <p class="post-content">${post.content}</p>
+          <div class="post-actions">
+            <button class="post-action"><i class="fas fa-heart"></i> ${post.likes}</button>
+            <button class="post-action"><i class="fas fa-comment"></i> ${post.comments}</button>
+            <button class="post-action"><i class="fas fa-share"></i> Share</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize
+    updateCard();
+  </script>
+</body>
+</html>
+
