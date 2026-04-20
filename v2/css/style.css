@@ -491,6 +491,7 @@ body {
   perspective: 1200px;
   cursor: pointer;
   position: relative;
+  height: 180px;
 }
 
 .card-face {
@@ -504,6 +505,10 @@ body {
   transition: transform 0.6s ease;
   position: absolute;
   inset: 0;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .card-front {
@@ -549,7 +554,7 @@ body {
   display: flex;
   gap: 18px;
   justify-content: center;
-  margin-top: 22px;
+  margin-top: 30px;
 }
 
 .control-btn {
