@@ -13,11 +13,196 @@ const vocabulary = [
 ];
 
 const courses = [
-  { id: 1, title: 'Japanese Tea Ceremony', tag: 'Tradition', desc: 'Explore the art and philosophy behind the traditional Japanese tea ceremony (茶道).', icon: '🍵', lessons: 5 },
-  { id: 2, title: 'Samurai & Bushido', tag: 'History', desc: 'Learn about the warrior class of feudal Japan and their code of honor.', icon: '⚔️', lessons: 8 },
-  { id: 3, title: 'Japanese Festivals', tag: 'Culture', desc: 'Discover the colorful festivals (matsuri) celebrated throughout Japan.', icon: '🎆', lessons: 6 },
-  { id: 4, title: 'Zen & Buddhism', tag: 'Philosophy', desc: 'Understanding the influence of Zen Buddhism on Japanese culture.', icon: '🧘', lessons: 7 },
-  { id: 5, title: 'Japanese Cuisine', tag: 'Food', desc: 'From sushi to ramen: explore the world of Japanese culinary arts.', icon: '🍱', lessons: 10 },
+  { 
+    id: 1, 
+    title: 'Japanese Tea Ceremony', 
+    tag: 'Tradition', 
+    desc: 'Explore the art and philosophy behind the traditional Japanese tea ceremony (茶道).', 
+    icon: '🍵', 
+    lessons: 5,
+    story: [
+      {
+        text: "In the misty mountains of Kyoto, where ancient temples whisper secrets to the wind, there lived a master tea ceremony practitioner named Hiroshi. His small tea room, built in the traditional sukiya style, was a sanctuary of peace and mindfulness.",
+        keywords: ["茶道 (chadō)", "茶室 (chashitsu)", "数寄屋造り (sukiyazukuri)"]
+      },
+      {
+        text: "Every morning at dawn, Hiroshi would carefully arrange the tea utensils - the chawan (tea bowl), the chasen (bamboo whisk), and the chashaku (tea scoop). Each item was chosen not just for its function, but for its aesthetic harmony and the story it told.",
+        keywords: ["茶碗 (chawan)", "茶筅 (chasen)", "茶杓 (chashaku)", "和 (wa)"]
+      },
+      {
+        text: "The tea ceremony, or chado, is more than just drinking tea. It is a spiritual practice that embodies the principles of harmony (wa), respect (kei), purity (sei), and tranquility (jaku). Through the simple act of preparing and sharing matcha, participants connect with the present moment.",
+        keywords: ["抹茶 (matcha)", "和敬清寂 (wakeiseijaku)", "敬 (kei)", "清 (sei)", "寂 (jaku)"]
+      },
+      {
+        text: "During the ceremony, every movement is deliberate and graceful. The host carefully measures the bright green matcha powder, whisks it with hot water until it becomes a frothy elixir, and presents it to guests with deep reverence. The guests, in turn, receive the bowl with both hands, turning it slightly before drinking to show appreciation.",
+        keywords: ["点前 (temae)", "一服 (ippuku)", "茶道 (sadō)"]
+      },
+      {
+        text: "As you participate in chado, you learn that true beauty lies in simplicity, and that the most profound connections are made in silence. The tea room becomes a microcosm of the universe, where time slows down and the ordinary becomes extraordinary.",
+        keywords: ["侘び寂び (wabi-sabi)", "静寂 (seijaku)", "一期一会 (ichigoichie)"]
+      }
+    ]
+  },
+  { 
+    id: 2, 
+    title: 'Samurai & Bushido', 
+    tag: 'History', 
+    desc: 'Learn about the warrior class of feudal Japan and their code of honor.', 
+    icon: '⚔️', 
+    lessons: 8,
+    story: [
+      {
+        text: "In the turbulent era of feudal Japan, when warlords battled for supremacy and cherry blossoms fell like tears on bloodstained fields, the samurai emerged as the ultimate warriors. These were not mere soldiers, but knights bound by an unbreakable code of honor.",
+        keywords: ["侍 (samurai)", "戦国時代 (sengoku jidai)", "桜 (sakura)"]
+      },
+      {
+        text: "The samurai's life was one of constant readiness. Their katana swords, forged with mystical precision by master swordsmiths, were not just weapons but extensions of their souls. Each blade carried the spirit of its maker and the destiny of its wielder.",
+        keywords: ["刀 (katana)", "刀匠 (katana kaji)", "魂 (tamashii)"]
+      },
+      {
+        text: "Bushido, the Way of the Warrior, was more than a set of rules - it was a philosophy that governed every aspect of a samurai's life. Rectitude, courage, benevolence, respect, honesty, honor, and loyalty formed the seven virtues that defined true bushido.",
+        keywords: ["武士道 (bushidō)", "義 (gi)", "勇 (yū)", "仁 (jin)", "礼 (rei)", "誠 (sei)", "忠 (chū)"]
+      },
+      {
+        text: "The samurai lived by the principle of 'death before dishonor.' Seppuku, ritual suicide, was the ultimate act of atonement when honor was lost. Yet, beneath their stern exterior, many samurai were poets, artists, and scholars who found beauty in the fleeting nature of life.",
+        keywords: ["切腹 (seppuku)", "名誉 (meiyo)", "俳人 (haijin)", "浮世 (ukiyo)"]
+      },
+      {
+        text: "Though the samurai class was abolished in 1876, their spirit lives on in modern Japan. The discipline, loyalty, and respect for tradition that defined the samurai continue to influence Japanese culture, business practices, and martial arts around the world.",
+        keywords: ["武士 (bushi)", "忠誠 (chūsei)", "伝統 (dentō)", "武道 (budō)"]
+      },
+      {
+        text: "The samurai's armor, with its intricate lacquered plates and fierce mask-like menpo, was both protection and intimidation. Each piece told a story of battles won and comrades lost, a tangible reminder of the warrior's path.",
+        keywords: ["鎧 (yoroi)", "面頬 (menpō)", "兜 (kabuto)", "具足 (gusoku)"]
+      },
+      {
+        text: "In the quiet moments between battles, samurai would practice calligraphy, compose haiku poetry, or arrange flowers in the art of ikebana. They understood that true strength came not just from physical prowess, but from cultivating the spirit and appreciating life's transient beauty.",
+        keywords: ["書道 (shodō)", "俳句 (haiku)", "生け花 (ikebana)", "無常 (mujō)"]
+      }
+    ]
+  },
+  { 
+    id: 3, 
+    title: 'Japanese Festivals', 
+    tag: 'Culture', 
+    desc: 'Discover the colorful festivals (matsuri) celebrated throughout Japan.', 
+    icon: '🎆', 
+    lessons: 6,
+    story: [
+      {
+        text: "Japan's festivals, or matsuri, are explosions of color, sound, and community spirit that transform ordinary streets into magical wonderlands. From the neon glow of summer fireworks to the solemn beauty of winter illuminations, each festival tells a story of tradition and renewal.",
+        keywords: ["祭り (matsuri)", "花火 (hanabi)", "伝統 (dentō)"]
+      },
+      {
+        text: "The Kanamara Matsukuri Festival, also known as the Festival of the Steel Phallus, originated in Kawasaki as a fertility celebration. Local craftsmen would create phallic-shaped mikoshi (portable shrines) and parade them through the streets, blessing participants with good fortune and protection from misfortune.",
+        keywords: ["金玉祭り (kanamara matsuri)", "神輿 (mikoshi)", "幸運 (kōun)"]
+      },
+      {
+        text: "During the summer months, Japan comes alive with hanabi taikai - spectacular fireworks displays that light up the night sky. Families spread picnic blankets along riverbanks, sharing food and laughter as the pyrotechnic masterpieces unfold above, each burst telling a story of celebration and community.",
+        keywords: ["花火大会 (hanabi taikai)", "花火師 (hanabishi)", "コミュニティ (komyuniti)"]
+      },
+      {
+        text: "The Yuki Matsuri in Sapporo transforms the winter city into a wonderland of ice sculptures. Massive blocks of ice, carved by artists from around the world, depict everything from dragons to Disney characters, glowing ethereally under colored lights as snowflakes dance in the cold night air.",
+        keywords: ["雪まつり (yuki matsuri)", "雪像 (yūsō)", "雪 (yuki)"]
+      },
+      {
+        text: "In Kyoto, the Gion Matsuri is a month-long celebration honoring the gods and warding off plagues. Massive yamaboko floats, some weighing over 12 tons, are paraded through the streets by teams of men who have trained for months. The festival reaches its climax with the Yoiyama evening illuminations, when the floats are lit by thousands of lanterns.",
+        keywords: ["祇園祭 (gion matsuri)", "山鉾 (yamaboko)", "宵山 (yoiyama)"]
+      },
+      {
+        text: "The Hadaka Matsuri, or Naked Festivals, test participants' endurance and faith as they brave freezing temperatures in nothing but fundoshi loincloths. These festivals, held at temples across Japan, symbolize purification and the casting away of worldly desires for spiritual renewal.",
+        keywords: ["裸祭り (hadaka matsuri)", "褌 (fundoshi)", "浄化 (jōka)"]
+      }
+    ]
+  },
+  { 
+    id: 4, 
+    title: 'Zen & Buddhism', 
+    tag: 'Philosophy', 
+    desc: 'Understanding the influence of Zen Buddhism on Japanese culture.', 
+    icon: '🧘', 
+    lessons: 7,
+    story: [
+      {
+        text: "In the misty mountains of Kyoto, where ancient temples perch on hillsides like wise old sages, Zen Buddhism found its perfect home in Japan. Brought from China in the 12th century, Zen transformed Japanese culture with its emphasis on meditation, mindfulness, and the beauty of impermanence.",
+        keywords: ["禅 (zen)", "仏教 (bukkyō)", "瞑想 (meisō)", "無常 (mujō)"]
+      },
+      {
+        text: "The story of Zen's arrival in Japan is legendary. The monk Eisai, after years of study in China, returned with tea seeds and the teachings of Rinzai Zen. He established the first Zen temple in Japan, introducing not just a religion, but a way of life that would influence art, architecture, and philosophy for centuries.",
+        keywords: ["臨済宗 (rinzai shū)", "茶 (cha)", "寺院 (jiin)", "明菴栄西 (myōan eisai)"]
+      },
+      {
+        text: "Zen gardens, with their carefully raked gravel and precisely placed stones, are not mere decorations but meditation aids. The famous rock garden at Ryoan-ji, with its 15 stones arranged on white gravel, invites contemplation of the relationship between emptiness and form, chaos and order.",
+        keywords: ["枯山水 (karesansui)", "龍安寺 (ryōan-ji)", "石 (ishi)", "空 (kū)"]
+      },
+      {
+        text: "The tea ceremony, chanoyu, evolved from Zen monastic practices. The simple act of preparing and serving tea became a spiritual discipline, teaching participants to find enlightenment in everyday activities. Every movement, from whisking the matcha to receiving the bowl, is performed with mindful awareness.",
+        keywords: ["茶の湯 (chanoyu)", "悟り (satori)", "一期一会 (ichigoichie)", "気づき (kidzuki)"]
+      },
+      {
+        text: "Zen has profoundly influenced Japanese arts. The spontaneity of sumi-e ink painting, the disciplined precision of calligraphy, and the minimalist aesthetics of traditional architecture all reflect Zen principles. Even modern practices like judo and karate carry the philosophical weight of Zen mindfulness.",
+        keywords: ["墨絵 (sumi-e)", "書道 (shodō)", "柔道 (jūdō)", "空手 (karate)"]
+      },
+      {
+        text: "The Zen concept of 'mu' - the void or nothingness - challenges our conventional understanding of reality. In Zen koans, paradoxical riddles like 'What is the sound of one hand clapping?' are used to break through logical thinking and achieve enlightenment.",
+        keywords: ["無 (mu)", "公案 (kōan)", "禅問答 (zen mondō)", "悟り (satori)"]
+      },
+      {
+        text: "Today, Zen continues to evolve, finding expression in modern contexts. Corporate mindfulness programs, stress-reduction techniques, and even digital meditation apps all draw from the ancient wisdom of Zen, proving that its teachings remain relevant in our fast-paced world.",
+        keywords: ["マインドフルネス (maindo furunesu)", "ストレス (sutoresu)", "瞑想 (meisō)", "智慧 (chie)"]
+      }
+    ]
+  },
+  { 
+    id: 5, 
+    title: 'Japanese Cuisine', 
+    tag: 'Food', 
+    desc: 'From sushi to ramen: explore the world of Japanese culinary arts.', 
+    icon: '🍱', 
+    lessons: 10,
+    story: [
+      {
+        text: "Japanese cuisine is a symphony of flavors, textures, and philosophies that reflects the country's deep connection to nature and seasons. From the delicate artistry of sushi to the comforting warmth of ramen, each dish tells a story of tradition, innovation, and respect for ingredients.",
+        keywords: ["日本料理 (nihon ryōri)", "季節 (kisetsu)", "自然 (shizen)"]
+      },
+      {
+        text: "The origins of sushi are humble yet profound. In ancient times, fish was preserved by fermenting it with rice and salt - a practical solution that evolved into one of the world's most refined cuisines. The vinegar-seasoned rice we know today was developed in the 19th century by Yohei Hanaya, who wanted to serve fresh fish without the wait for fermentation.",
+        keywords: ["寿司 (sushi)", "発酵 (hakkō)", "酢 (su)", "鮮魚 (sensakana)"]
+      },
+      {
+        text: "Ramen, that beloved noodle soup, has a fascinating immigrant story. Brought to Japan by Chinese immigrants in the late 19th century, it evolved from simple wheat noodles in broth to a culinary art form with regional variations. Tonkotsu from Kyushu, miso from Hokkaido, and shoyu from Tokyo each tell their own tale of adaptation and innovation.",
+        keywords: ["ラーメン (rāmen)", "豚骨 (tonkotsu)", "味噌 (misō)", "醤油 (shōyu)"]
+      },
+      {
+        text: "The art of kaiseki dining represents the pinnacle of Japanese culinary philosophy. This multi-course meal, served in ryokan inns, celebrates the seasons through meticulously prepared small dishes. Each course is designed not just for taste, but for visual beauty and balance, embodying the principle of 'wa' or harmony.",
+        keywords: ["懐石 (kaiseki)", "旅館 (ryokan)", "季節感 (kisetsukan)", "栄養 (eiyō)"]
+      },
+      {
+        text: "Tempura, with its crispy golden batter, arrived with Portuguese traders in the 16th century. The Japanese adapted this frying technique, using lighter batters and seasonal vegetables and seafood. The result is a dish that celebrates the natural flavors of fresh ingredients while adding a satisfying crunch.",
+        keywords: ["天ぷら (tempura)", "天ぷら粉 (tempura ko)", "野菜 (yasai)", "海鮮 (kaisen)"]
+      },
+      {
+        text: "Bento boxes, those colorful compartmentalized lunches, reflect Japanese efficiency and aesthetics. Originally designed for theater-goers in the 19th century, bentos evolved into works of art that mothers and chefs create with love. Each compartment tells a nutritional story, balancing colors, textures, and nutrients.",
+        keywords: ["弁当 (bentō)", "栄養バランス (eiyō baransu)", "色彩 (shikisai)", "愛情 (aijō)"]
+      },
+      {
+        text: "The concept of 'umami,' that fifth taste beyond sweet, sour, salty, and bitter, was discovered by Japanese scientist Kikunae Ikeda in 1908. This savory taste, found in ingredients like seaweed, mushrooms, and fermented foods, explains why Japanese cuisine feels so satisfying and complex.",
+        keywords: ["旨味 (umami)", "昆布 (kombu)", "椎茸 (shiitake)", "醸造 (jōzō)"]
+      },
+      {
+        text: "Washoku, traditional Japanese cuisine, was recognized by UNESCO as an Intangible Cultural Heritage in 2013. This recognition celebrates not just the food itself, but the sustainable practices, seasonal awareness, and communal values that Japanese cuisine embodies.",
+        keywords: ["和食 (washoku)", "持続可能 (jizoku kanō)", "無形文化遺産 (mukei bunka isan)"]
+      },
+      {
+        text: "Modern Japanese cuisine continues to innovate while honoring tradition. From the avant-garde presentations of molecular gastronomy to the fusion creations of chefs like Nobu Matsuhisa, Japanese culinary arts continue to evolve and influence global cuisine.",
+        keywords: ["分子料理 (bunshi ryōri)", "フュージョン (fyūjon)", "革新 (kakushin)", "伝統 (dentō)"]
+      },
+      {
+        text: "The tea that accompanies Japanese meals is more than refreshment - it's a ritual. Green tea, sencha, gyokuro, and matcha each have their place, chosen not just for taste but for the way they complement the meal and aid digestion. The simple act of brewing and serving tea connects eaters to centuries of tradition.",
+        keywords: ["緑茶 (ryokucha)", "煎茶 (sencha)", "玉露 (gyokuro)", "抹茶 (matcha)"]
+      }
+    ]
+  },
 ];
 
 const quizData = {
@@ -103,7 +288,12 @@ function loadUser() {
 function applySystemDarkMode() {
   if (!window.matchMedia) return;
   const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  document.documentElement.classList.toggle('dark', isDark);
+  // Only toggle if not already set by inline script
+  if (isDark && !document.documentElement.classList.contains('dark')) {
+    document.documentElement.classList.add('dark');
+  } else if (!isDark && document.documentElement.classList.contains('dark')) {
+    document.documentElement.classList.remove('dark');
+  }
 }
 
 function initDarkModeListener() {
@@ -232,32 +422,47 @@ function renderCourseDetail() {
   const detail = getEl('courseDetail');
   if (!detail) return;
 
-  let lessonsHTML = '';
-  for (let i = 1; i <= course.lessons; i++) {
-    const completed = i <= 2;
-    lessonsHTML += `
-      <div class="lesson-item">
-        <div class="lesson-number">${i}</div>
-        <div class="lesson-info">
-          <h4>Lesson ${i}: ${getLessonTitle(course.title, i)}</h4>
-          <p>${completed ? 'Completed' : 'Not started'}</p>
+  // Create story paragraphs HTML with keywords
+  const storyHTML = course.story.map(paragraph => 
+    `<div class="story-paragraph">
+      <p style="line-height: 1.7; margin-bottom: 15px; color: var(--text-primary);">${paragraph.text}</p>
+      <div class="keywords-section">
+        <div class="keywords-list">
+          ${paragraph.keywords.map(keyword => `<span class="keyword-tag">${keyword}</span>`).join('')}
         </div>
-        ${completed ? '<i class="fas fa-check-circle lesson-status"></i>' : ''}
       </div>
-    `;
-  }
+    </div>`
+  ).join('');
 
   detail.innerHTML = `
     <button class="back-btn" onclick="window.history.back()"><i class="fas fa-arrow-left"></i> Back to Courses</button>
     <div class="course-detail-content">
-      <h2>${course.icon} ${course.title}</h2>
-      <p style="color: var(--text-secondary); line-height: 1.6;">${course.desc}</p>
-      <div class="progress-bar" style="margin-top: 20px;">
-        <div class="progress-fill" style="width: ${(2 / course.lessons) * 100}%"></div>
+      <div class="course-header">
+        <div class="course-icon-large">${course.icon}</div>
+        <h1>${course.title}</h1>
+        <span class="course-tag">${course.tag}</span>
       </div>
-      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 10px;">2 of ${course.lessons} lessons completed</p>
-      <div class="lesson-list">
-        ${lessonsHTML}
+      
+      <div class="course-description">
+        <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px;">${course.desc}</p>
+      </div>
+      
+      <div class="course-story">
+        <h2 style="color: var(--sakura-dark); margin-bottom: 20px; font-family: 'Playfair Display', serif;">The Story</h2>
+        <div class="story-content">
+          ${storyHTML}
+        </div>
+      </div>
+      
+      <div class="course-progress" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border);">
+        <h3 style="margin-bottom: 15px; color: var(--text-primary);">Course Progress</h3>
+        <div class="progress-bar" style="margin-bottom: 10px;">
+          <div class="progress-fill" style="width: ${(2 / course.lessons) * 100}%"></div>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">2 of ${course.lessons} lessons completed</p>
+        <button class="btn btn-primary" style="margin-top: 15px;" onclick="window.location.href='courses.html'">
+          <i class="fas fa-book-open"></i> Continue Learning
+        </button>
       </div>
     </div>
   `;
