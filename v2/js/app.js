@@ -58,6 +58,9 @@ const dictionary = [
   { word: '嬉しい', reading: 'うれしい (ureshii)', meaning: 'Happy, glad', example: 'とても嬉しいです - I am very happy' },
 ];
 
+const MISTRAL_API_KEY = 'SPWcjz0haCkDtFo5RgEeDaJF78hDxWmC';
+const MISTRAL_MODEL = 'mistral-large-latest';
+
 // App State
 let currentUser = null;
 let currentCardIndex = 0;
@@ -445,28 +448,34 @@ async function translateText() {
   resultDiv.innerHTML = '<div class="translation-loading"><div class="loading-spinner"></div>Translating...</div>';
 
   try {
-    if (!window.Poe) {
-      resultDiv.innerHTML = '<p style="color: #E74C3C;">Translation service unavailable.</p>';
-      return;
-    }
+    const prompt = `You are a Japanese-English translator. Translate the following text. If it's English, translate to Japanese with romaji. If it's Japanese, translate to English. Provide the translation and a brief note about any nuances. Keep the response concise.\n\nText: "${text}"`;
 
-    window.Poe.registerHandler('translate-handler', (result) => {
-      const msg = result.responses[0];
-      if (msg.status === 'error') {
-        resultDiv.innerHTML = `<p style="color: #E74C3C;">Error: ${msg.statusText || 'Translation failed'}</p>`;
-      } else {
-        resultDiv.innerHTML = `<div class="translation-result">${marked.parse(msg.content)}</div>`;
-      }
+    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${MISTRAL_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: MISTRAL_MODEL,
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 512,
+        temperature: 0.3
+      })
     });
 
-    await window.Poe.sendUserMessage(
-      `@GPT-5.1 You are a Japanese-English translator. Translate the following text. If it's English, translate to Japanese (with romaji). If it's Japanese, translate to English. Provide the translation and a brief note about any nuances. Keep response concise.\n\nText: "${text}"`,
-      {
-        handler: 'translate-handler',
-        stream: true,
-        openChat: false
-      }
-    );
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`API error ${response.status}: ${errorText}`);
+    }
+
+    const data = await response.json();
+    const translation = data?.choices?.[0]?.message?.content ?? '';
+    if (!translation) {
+      throw new Error('No translation returned from Mistral. The browser request may be blocked by CORS.');
+    }
+
+    resultDiv.innerHTML = `<div class="translation-result">${marked.parse(translation)}</div>`;
   } catch (err) {
     resultDiv.innerHTML = `<p style="color: #E74C3C;">Error: ${err.message || 'Translation service unavailable'}</p>`;
   }
