@@ -589,6 +589,11 @@ body {
   color: #fff;
 }
 
+.control-btn.speak {
+  background: #3498db;
+  color: #fff;
+}
+
 /* Courses */
 .courses-container {
   padding: 20px;

@@ -174,6 +174,18 @@ function nextCard() {
   updateCard();
 }
 
+function speakJapanese() {
+  const card = vocabulary[currentCardIndex];
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(card.word);
+    utterance.lang = 'ja-JP'; // Set language to Japanese
+    utterance.rate = 0.8; // Slightly slower for clarity
+    speechSynthesis.speak(utterance);
+  } else {
+    alert('Speech synthesis is not supported in your browser.');
+  }
+}
+
 // Courses
 function renderCourses() {
   const container = getEl('coursesList');
