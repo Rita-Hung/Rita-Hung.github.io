@@ -802,7 +802,7 @@ function openComments(postId, postContent) {
       </div>
       <div style="display: flex; gap: 10px;">
         <input type="text" id="newComment" placeholder="Write a comment..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary);">
-        <button class="btn btn-primary" onclick="postComment(${postId})">Post</button>
+        <button class="btn btn-primary" onclick="postComment('${postId}')">Post</button>
       </div>
       <div class="alert-modal-buttons">
         <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Close</button>
