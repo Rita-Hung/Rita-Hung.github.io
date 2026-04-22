@@ -94,6 +94,7 @@ body {
   position: relative;
   z-index: 10;
   min-height: 100vh;
+  padding-bottom: 70px;
 }
 
 .top-header {
@@ -137,15 +138,16 @@ body {
 }
 
 .nav-bar {
-  position: sticky;
+  position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
   z-index: 20;
   background: var(--bg-card);
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: center;
-  padding: 10px 0;
+  padding: 8px 0;
 }
 
 .nav-items {
@@ -160,19 +162,21 @@ body {
 .nav-item {
   flex: 1;
   border-radius: 16px;
-  padding: 10px 6px;
+  padding: 12px 8px;
   border: 1px solid transparent;
   background: var(--bg-secondary);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
   cursor: pointer;
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: 1.2rem;
   transition: all 0.2s ease;
   text-decoration: none;
+}
+
+.nav-item span {
+  display: none;
 }
 
 .nav-item.active {
@@ -295,7 +299,6 @@ body {
   color: #fff;
   cursor: pointer;
   font-weight: 600;
-  margin-bottom: 16px;
   box-shadow: 0 8px 18px rgba(255, 183, 197, 0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
