@@ -235,6 +235,15 @@ const forumPosts = [
   { author: 'NihongoLearner', avatar: 'N', time: '1 day ago', content: 'Does anyone have recommendations for Japanese podcasts for beginners? Looking for listening practice.', likes: 31, comments: 15 },
 ];
 
+const playlists = [
+  { id: 1, title: 'Beginner Japanese Vocabulary', videos: 50, icon: '📚', desc: 'Essential words for daily conversation' },
+  { id: 2, title: 'Hiragana Practice', videos: 46, icon: '🔤', desc: 'Master the Japanese phonetic alphabet' },
+  { id: 3, title: 'Japanese Grammar Basics', videos: 30, icon: '📖', desc: 'Grammar structures for beginners' },
+  { id: 4, title: 'JLPT N5 Listening', videos: 40, icon: '🎧', desc: 'Practice listening for JLPT N5' },
+  { id: 5, title: 'Japanese Culture & Customs', videos: 25, icon: '🏯', desc: 'Learn about Japanese traditions' },
+  { id: 6, title: 'Japanese Travel Phrases', videos: 20, icon: '✈️', desc: 'Useful phrases for traveling in Japan' },
+];
+
 const dictionary = [
   { word: '愛', reading: 'あい (ai)', meaning: 'Love', example: '愛している - I love you' },
   { word: '美しい', reading: 'うつくしい (utsukushii)', meaning: 'Beautiful', example: '美しい景色 - Beautiful scenery' },
@@ -374,6 +383,12 @@ function speakJapanese() {
   } else {
     alert('Speech synthesis is not supported in your browser.');
   }
+}
+
+function watchVideo() {
+  const card = vocabulary[currentCardIndex];
+  const encodedWord = encodeURIComponent(card.word);
+  window.open(`https://youglish.com/pronounce/${encodedWord}/japanese`, '_blank');
 }
 
 // Courses
@@ -779,6 +794,33 @@ function renderForum() {
   `).join('');
 }
 
+// Playlists
+function renderPlaylists() {
+  const container = getEl('playlistList');
+  if (!container) return;
+  container.innerHTML = playlists.map(playlist => `
+    <div class="playlist-card" onclick="openPlaylist(${playlist.id})">
+      <div class="playlist-thumbnail">
+        <span style="font-size: 2rem;">${playlist.icon}</span>
+        <div class="playlist-play-overlay">
+          <i class="fas fa-play-circle" style="font-size: 1.5rem; color: white;"></i>
+        </div>
+      </div>
+      <div class="playlist-content">
+        <h3 class="playlist-title">${playlist.title}</h3>
+        <div class="playlist-meta">${playlist.videos} videos • ${playlist.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openPlaylist(id) {
+  const playlist = playlists.find(p => p.id === id);
+  if (playlist) {
+    showAlert('Coming Soon', `Playlist "${playlist.title}" will be available soon!`);
+  }
+}
+
 // Alerts
 function showAlert(title, message, callback) {
   const overlay = document.createElement('div');
@@ -891,6 +933,9 @@ function initPage() {
   if (page === 'forum') {
     renderForum();
   }
+  if (page === 'playlist') {
+    renderPlaylists();
+  }
   if (page === 'settings') {
     updateDarkModeToggle();
   }
@@ -907,6 +952,7 @@ function setActiveNav(page) {
     translate: 'translate.html',
     dictionary: 'dictionary.html',
     forum: 'forum.html',
+    playlist: 'playlist.html',
   };
   const target = map[page];
   if (!target) return;

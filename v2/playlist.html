@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sakura Gaku - Course Detail</title>
+  <title>Sakura Gaku - YouTube Playlists</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css" />
   <script>
-    // Apply dark mode immediately to prevent flash
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       document.documentElement.classList.add('dark');
     }
@@ -16,17 +15,18 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body data-page="courseDetail">
+<body data-page="playlist">
   <div class="bg-pattern"></div>
   <div id="petals"></div>
 
   <div class="app-container">
     <div class="top-header">
-      <button class="back-btn" onclick="window.location.href='courses.html'"><i class="fas fa-arrow-left"></i> Back</button>
-      <div class="header-title">Course Details</div>
+      <button class="back-btn" onclick="window.location.href='home.html'"><i class="fas fa-arrow-left"></i> Back</button>
+      <div class="header-title">YouTube Playlists</div>
     </div>
 
-    <div class="course-detail" id="courseDetail"></div>
+    <div class="playlist-container" id="playlistList">
+    </div>
   </div>
 
   <nav class="nav-bar">
