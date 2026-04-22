@@ -172,6 +172,7 @@ body {
   color: var(--text-secondary);
   font-size: 0.75rem;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .nav-item.active {
@@ -1316,6 +1317,15 @@ body {
 
 .post-action:hover {
   background: #2d2d48;
+}
+
+.post-action.active {
+  background: #e91e63;
+  border-color: #e91e63;
+}
+
+.post-action.active i {
+  color: #fff !important;
 }
 
 /* Modal */

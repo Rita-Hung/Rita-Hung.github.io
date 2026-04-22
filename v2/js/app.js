@@ -236,12 +236,12 @@ const forumPosts = [
 ];
 
 const playlists = [
-  { id: 1, title: 'Beginner Japanese Vocabulary', videos: 50, icon: '📚', desc: 'Essential words for daily conversation' },
-  { id: 2, title: 'Hiragana Practice', videos: 46, icon: '🔤', desc: 'Master the Japanese phonetic alphabet' },
-  { id: 3, title: 'Japanese Grammar Basics', videos: 30, icon: '📖', desc: 'Grammar structures for beginners' },
-  { id: 4, title: 'JLPT N5 Listening', videos: 40, icon: '🎧', desc: 'Practice listening for JLPT N5' },
-  { id: 5, title: 'Japanese Culture & Customs', videos: 25, icon: '🏯', desc: 'Learn about Japanese traditions' },
-  { id: 6, title: 'Japanese Travel Phrases', videos: 20, icon: '✈️', desc: 'Useful phrases for traveling in Japan' },
+  { id: 1, title: 'Learn Hiragana & Katakana', videos: 46, icon: '🔤', desc: 'Kantan Kana - Complete kana guide', url: 'https://www.youtube.com/playlist?list=PLA7DB863D6946E1CD' },
+  { id: 2, title: 'JLPT N5 Grammar Complete', videos: 30, icon: '📖', desc: 'Beginner Japanese lessons', url: 'https://www.youtube.com/playlist?list=PL0A1mmE9MOVIS2KcY8hIA7wPt_EPhnVPt' },
+  { id: 3, title: 'Japanese For Beginners - Genki I', videos: 25, icon: '📚', desc: 'Genki textbook lessons', url: 'https://www.youtube.com/playlist?list=PLZZRLam3SpTMjvBGsVCO1Kf2Fv81mA2Fn' },
+  { id: 4, title: 'JLPT N5 Listening Practice', videos: 40, icon: '🎧', desc: 'Easy Japanese listening N5-N4', url: 'https://www.youtube.com/playlist?list=PLTlJPzrg0Y1jjQyXW6ryZa57gEncbihXs' },
+  { id: 5, title: 'Tobira N5 Vocabulary', videos: 20, icon: '🏯', desc: 'Tobira vocabulary lessons', url: 'https://www.youtube.com/playlist?list=PLRIvvAKkEG9ncwHCX-a-zoJk6ZNLk9FXQ' },
+  { id: 6, title: 'Hiragana Writing Practice', videos: 15, icon: '✍️', desc: 'Writing and reading practice', url: 'https://www.youtube.com/playlist?list=PLVGw_A21plC4pxEbXC3Sv_9N6NizqxM3M' },
 ];
 
 const dictionary = [
@@ -768,14 +768,121 @@ function searchDictionary() {
 }
 
 // Forum
+function getLikedPosts() {
+  const saved = localStorage.getItem('forumLikedPosts');
+  return saved ? JSON.parse(saved) : [];
+}
+
+function toggleLike(postId) {
+  let liked = getLikedPosts();
+  const index = liked.indexOf(postId);
+  if (index > -1) {
+    liked.splice(index, 1);
+  } else {
+    liked.push(postId);
+  }
+  localStorage.setItem('forumLikedPosts', JSON.stringify(liked));
+  renderForum();
+}
+
+function openComments(postId, postContent) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay active';
+  overlay.innerHTML = `
+    <div class="alert-modal" style="max-width: 500px;">
+      <h3>Comments</h3>
+      <div style="margin: 15px 0; padding: 10px; background: var(--bg-secondary); border-radius: 8px;">
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">${postContent}</p>
+      </div>
+      <div style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;" id="commentsList">
+        <p style="text-align: center; color: var(--text-secondary); padding: 20px;">Be the first to comment!</p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <input type="text" id="newComment" placeholder="Write a comment..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary);">
+        <button class="btn btn-primary" onclick="postComment(${postId})">Post</button>
+      </div>
+      <div class="alert-modal-buttons">
+        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Close</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  loadComments(postId);
+}
+
+function loadComments(postId) {
+  const saved = localStorage.getItem('forumComments');
+  const allComments = saved ? JSON.parse(saved) : {};
+  const postComments = allComments[postId] || [];
+  const container = getEl('commentsList');
+  if (!container) return;
+  
+  if (postComments.length === 0) {
+    container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">Be the first to comment!</p>';
+  } else {
+    container.innerHTML = postComments.map(c => `
+      <div style="padding: 10px; border-bottom: 1px solid var(--border);">
+        <div style="font-weight: 500; font-size: 0.9rem;">${c.author}</div>
+        <div style="color: var(--text-secondary); font-size: 0.85rem;">${c.text}</div>
+      </div>
+    `).join('');
+  }
+}
+
+function postComment(postId) {
+  const input = getEl('newComment');
+  if (!input || !input.value.trim()) return;
+  
+  const saved = localStorage.getItem('forumComments');
+  const allComments = saved ? JSON.parse(saved) : {};
+  if (!allComments[postId]) allComments[postId] = [];
+  
+  const username = localStorage.getItem('sakuraUser') || 'You';
+  allComments[postId].push({ author: username, text: input.value.trim(), time: 'Just now' });
+  localStorage.setItem('forumComments', JSON.stringify(allComments));
+  
+  loadComments(postId);
+  input.value = '';
+  
+  const post = forumPosts.find(p => p.author === 'Sakura_Fan' && p.content.includes('hiragana'));
+  if (post) {
+    const idx = forumPosts.indexOf(post);
+    if (idx > -1 && forumPosts[idx]) {
+      forumPosts[idx].comments++;
+    }
+  }
+}
+
+function sharePost(postId, content) {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Sakura Gaku',
+      text: content.substring(0, 100) + '...',
+      url: window.location.href
+    }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      showAlert('Link Copied', 'Link to post has been copied to clipboard!');
+    }).catch(() => {
+      showAlert('Share', `Share this content: ${window.location.href}`);
+    });
+  }
+}
+
 function renderForum() {
   const container = getEl('forumPosts');
   if (!container) return;
+  const liked = getLikedPosts();
+  
   container.innerHTML = `
     <button class="btn btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="showAlert('Coming Soon', 'Post creation will be available soon!')">
       <i class="fas fa-plus"></i> Create New Post
     </button>
-  ` + forumPosts.map(post => `
+  ` + forumPosts.map((post, idx) => {
+    const postId = idx;
+    const isLiked = liked.includes(postId);
+    const displayLikes = post.likes + (isLiked ? 1 : 0);
+    return `
     <div class="forum-post">
       <div class="post-header">
         <div class="post-avatar">${post.avatar}</div>
@@ -786,12 +893,13 @@ function renderForum() {
       </div>
       <p class="post-content">${post.content}</p>
       <div class="post-actions">
-        <button class="post-action"><i class="fas fa-heart"></i> ${post.likes}</button>
-        <button class="post-action"><i class="fas fa-comment"></i> ${post.comments}</button>
-        <button class="post-action"><i class="fas fa-share"></i> Share</button>
+        <button class="post-action ${isLiked ? 'active' : ''}" onclick="toggleLike(${postId})"><i class="fas fa-heart"></i> <span class="like-count">${displayLikes}</span></button>
+        <button class="post-action" onclick="openComments(${postId}, '${post.content.replace(/'/g, "\\'")}')"><i class="fas fa-comment"></i> ${post.comments}</button>
+        <button class="post-action" onclick="sharePost(${postId}, '${post.content.replace(/'/g, "\\'")}')"><i class="fas fa-share"></i> Share</button>
       </div>
     </div>
-  `).join('');
+  `;
+}).join('');
 }
 
 // Playlists
@@ -799,7 +907,7 @@ function renderPlaylists() {
   const container = getEl('playlistList');
   if (!container) return;
   container.innerHTML = playlists.map(playlist => `
-    <div class="playlist-card" onclick="openPlaylist(${playlist.id})">
+    <div class="playlist-card" onclick="openPlaylist('${playlist.url}')">
       <div class="playlist-thumbnail">
         <span style="font-size: 2rem;">${playlist.icon}</span>
         <div class="playlist-play-overlay">
@@ -814,10 +922,9 @@ function renderPlaylists() {
   `).join('');
 }
 
-function openPlaylist(id) {
-  const playlist = playlists.find(p => p.id === id);
-  if (playlist) {
-    showAlert('Coming Soon', `Playlist "${playlist.title}" will be available soon!`);
+function openPlaylist(url) {
+  if (url) {
+    window.open(url, '_blank');
   }
 }
 
