@@ -954,7 +954,7 @@ body {
 }
 
 .quiz-type-card {
-  background: var(--bg-secondary);
+  background: #fff;
   border-radius: 20px;
   padding: 18px;
   border: 1px solid var(--border);
@@ -1012,7 +1012,7 @@ body {
   padding: 14px;
   border-radius: 16px;
   border: 1px solid var(--border);
-  background: var(--bg-primary);
+  background: #fff;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.25s ease;
@@ -1031,6 +1031,17 @@ body {
 .option-btn.incorrect {
   background: #e74c3c;
   color: #fff;
+}
+
+.dark .option-btn {
+  background: #fff;
+  color: #1a1a2e;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .quiz-type-card {
+  background: #fff;
+  color: #1a1a2e;
 }
 
 .feedback-box {
