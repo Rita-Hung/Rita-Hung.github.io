@@ -851,6 +851,7 @@ function postComment(postId) {
   
   loadComments(postKey);
   input.value = '';
+  renderForum();
 }
 
 function sharePost(postId, content) {
