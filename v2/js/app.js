@@ -441,8 +441,13 @@ function renderCourseDetail() {
 
   // Create story paragraphs HTML with keywords
   const storyHTML = course.story.map((paragraph, index) => 
-    `<div class="story-paragraph" onclick="openStoryModal(${index})" style="cursor: pointer;">
-      <p style="line-height: 1.7; margin-bottom: 15px; color: var(--text-primary);">${paragraph.text}</p>
+    `<div class="story-paragraph">
+      <div class="story-text-wrapper">
+        <p style="line-height: 1.7; margin-bottom: 15px; color: var(--text-primary);">${paragraph.text}</p>
+        <button class="speaker-btn" onclick="openStoryModal(${index})" title="Read aloud">
+          <i class="fas fa-volume-up"></i>
+        </button>
+      </div>
       <div class="keywords-section">
         <div class="keywords-list">
           ${paragraph.keywords.map(keyword => `<span class="keyword-tag" onclick="event.stopPropagation(); openVocabModal('${keyword.replace(/'/g, "\\'")}')">${keyword}</span>`).join('')}
@@ -869,16 +874,78 @@ function sharePost(postId, content) {
   }
 }
 
+function getPostsFromStorage() {
+  const saved = localStorage.getItem('forumPosts');
+  return saved ? JSON.parse(saved) : null;
+}
+
+function savePostsToStorage(posts) {
+  localStorage.setItem('forumPosts', JSON.stringify(posts));
+}
+
+function openCreatePost() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay active';
+  overlay.innerHTML = `
+    <div class="alert-modal" style="max-width: 500px;">
+      <h3>Create New Post</h3>
+      <div style="margin-bottom: 15px;">
+        <textarea id="newPostContent" placeholder="Share something with the community..." style="width: 100%; min-height: 120px; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); resize: vertical; font-family: inherit; box-sizing: border-box;"></textarea>
+      </div>
+      <div class="alert-modal-buttons">
+        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+        <button class="btn btn-primary" onclick="createPost()">Post</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function createPost() {
+  const content = getEl('newPostContent')?.value.trim();
+  if (!content) {
+    showAlert('Empty Post', 'Please write something before posting.');
+    return;
+  }
+  
+  const username = localStorage.getItem('sakuraUser') || 'Anonymous';
+  const initial = username.charAt(0).toUpperCase();
+  
+  const newPost = {
+    author: username,
+    avatar: initial,
+    time: 'Just now',
+    content: content,
+    likes: 0,
+    comments: 0
+  };
+  
+  let posts = [...forumPosts];
+  const stored = getPostsFromStorage();
+  if (stored) {
+    posts = [...stored, ...forumPosts];
+  }
+  
+  posts.unshift(newPost);
+  savePostsToStorage(posts);
+  
+  document.querySelector('.modal-overlay')?.remove();
+  renderForum();
+  showAlert('Posted!', 'Your post has been shared with the community!');
+}
+
 function renderForum() {
   const container = getEl('forumPosts');
   if (!container) return;
   const liked = getLikedPosts();
+  const stored = getPostsFromStorage();
+  const displayPosts = stored ? [...stored, ...forumPosts] : forumPosts;
   
   container.innerHTML = `
-    <button class="btn btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="showAlert('Coming Soon', 'Post creation will be available soon!')">
+    <button class="btn btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="openCreatePost()">
       <i class="fas fa-plus"></i> Create New Post
     </button>
-  ` + forumPosts.map((post, idx) => {
+  ` + displayPosts.map((post, idx) => {
     const postId = idx;
     const isLiked = liked.includes(postId);
     const displayLikes = post.likes + (isLiked ? 1 : 0);

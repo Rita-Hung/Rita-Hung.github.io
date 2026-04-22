@@ -806,6 +806,32 @@ body {
   margin: 0 -15px 30px -15px;
 }
 
+.story-text-wrapper {
+  position: relative;
+}
+
+.speaker-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--sakura-dark);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.speaker-btn:hover {
+  background: var(--sakura-light);
+  transform: scale(1.05);
+}
+
 .story-paragraph:hover {
   background: var(--bg-card);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
