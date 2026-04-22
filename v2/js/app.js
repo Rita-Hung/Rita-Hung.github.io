@@ -869,13 +869,31 @@ function sharePost(postId, content) {
   }
 }
 
+function openCreatePost() {
+  const username = localStorage.getItem('sakuraUser') || 'Guest';
+  const content = prompt('Share something with the community:');
+  if (!content || !content.trim()) return;
+  
+  const newPost = {
+    author: username,
+    avatar: username.charAt(0).toUpperCase(),
+    time: 'Just now',
+    content: content.trim(),
+    likes: 0,
+    comments: 0
+  };
+  
+  forumPosts.unshift(newPost);
+  renderForum();
+}
+
 function renderForum() {
   const container = getEl('forumPosts');
   if (!container) return;
   const liked = getLikedPosts();
   
   container.innerHTML = `
-    <button class="btn btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="showAlert('Coming Soon', 'Post creation will be available soon!')">
+    <button class="btn btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="openCreatePost()">
       <i class="fas fa-plus"></i> Create New Post
     </button>
   ` + forumPosts.map((post, idx) => {
