@@ -26,8 +26,59 @@
       <div class="header-title">Charts</div>
     </div>
 
-    <div class="charts-container">
-      <canvas id="progressChart" style="max-width: 400px; margin: 0 auto;"></canvas>
+    <div class="home-content">
+      <section class="hero-section">
+        <h1 class="hero-title">Track Your Progress</h1>
+        <p class="hero-subtitle">Visualize your learning journey and see how far you've come</p>
+      </section>
+
+      <section class="stats-section">
+        <div class="stat-card">
+          <div class="stat-number" id="wordsLearned">24</div>
+          <div class="stat-label">Words Learned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="streakDays">7</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="quizScore">85%</div>
+          <div class="stat-label">Quiz Accuracy</div>
+        </div>
+      </section>
+
+      <section class="charts-section">
+        <h2 class="section-title">Learning Progress</h2>
+        <div class="chart-card">
+          <canvas id="progressChart"></canvas>
+        </div>
+      </section>
+
+      <section class="achievements-section">
+        <h2 class="section-title">Achievements</h2>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-trophy"></i></div>
+            <h3>First Steps</h3>
+            <p>Learn your first 10 words</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-fire"></i></div>
+            <h3>Week Warrior</h3>
+            <p>7 day learning streak</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-star"></i></div>
+            <h3>Quiz Master</h3>
+            <p>Score 100% on a quiz</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-book-open"></i></div>
+            <h3>Dedicated Learner</h3>
+            <p>Complete 5 courses</p>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 

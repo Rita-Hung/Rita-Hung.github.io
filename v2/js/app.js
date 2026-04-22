@@ -611,17 +611,20 @@ function renderCharts() {
       datasets: [{
         label: 'Words Learned',
         data: [5, 12, 20, 35, 50, 70],
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 2,
+        backgroundColor: 'rgba(255, 182, 193, 0.3)',
+        borderColor: 'rgba(255, 182, 193, 1)',
+        borderWidth: 3,
         fill: true,
-        tension: 0.3,
-        pointRadius: 4,
-        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+        tension: 0.4,
+        pointRadius: 5,
+        pointBackgroundColor: 'rgba(255, 182, 193, 1)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
       }]
     },
     options: {
       responsive: true,
+      maintainAspectRatio: true,
       plugins: {
         legend: {
           display: false
@@ -636,7 +639,26 @@ function renderCharts() {
         y: {
           beginAtZero: true,
           ticks: {
-            stepSize: 10
+            stepSize: 10,
+            color: '#aaa',
+            font: { family: "'Noto Sans JP', sans-serif" }
+          },
+          grid: {
+            color: 'rgba(255, 255, 255, 0.1)'
+          },
+          title: {
+            display: true,
+            text: 'Words',
+            color: '#aaa'
+          }
+        },
+        x: {
+          ticks: {
+            color: '#aaa',
+            font: { family: "'Noto Sans JP', sans-serif" }
+          },
+          grid: {
+            color: 'rgba(255, 255, 255, 0.1)'
           }
         }
       }
