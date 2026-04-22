@@ -869,6 +869,17 @@ function sharePost(postId, content) {
   }
 }
 
+function getSavedPosts() {
+  const saved = localStorage.getItem('forumUserPosts');
+  return saved ? JSON.parse(saved) : [];
+}
+
+function saveUserPost(post) {
+  const posts = getSavedPosts();
+  posts.unshift(post);
+  localStorage.setItem('forumUserPosts', JSON.stringify(posts));
+}
+
 function openCreatePost() {
   const username = localStorage.getItem('sakuraUser') || 'Guest';
   const content = prompt('Share something with the community:');
@@ -883,7 +894,7 @@ function openCreatePost() {
     comments: 0
   };
   
-  forumPosts.unshift(newPost);
+  saveUserPost(newPost);
   renderForum();
 }
 
@@ -891,12 +902,14 @@ function renderForum() {
   const container = getEl('forumPosts');
   if (!container) return;
   const liked = getLikedPosts();
+  const userPosts = getSavedPosts();
+  const allPosts = [...userPosts, ...forumPosts];
   
   container.innerHTML = `
     <button class="btn btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="openCreatePost()">
       <i class="fas fa-plus"></i> Create New Post
     </button>
-  ` + forumPosts.map((post, idx) => {
+  ` + allPosts.map((post, idx) => {
     const postId = idx;
     const isLiked = liked.includes(postId);
     const displayLikes = post.likes + (isLiked ? 1 : 0);
