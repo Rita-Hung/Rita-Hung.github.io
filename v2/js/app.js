@@ -441,7 +441,10 @@ function renderCourseDetail() {
 
   // Create story paragraphs HTML with keywords
   const storyHTML = course.story.map((paragraph, index) => 
-    `<div class="story-paragraph" onclick="openStoryModal(${index})" style="cursor: pointer;">
+    `<div class="story-paragraph">
+      <div class="story-header">
+        <button class="speaker-btn" onclick="speakText('${paragraph.text.replace(/'/g, "\\'")}', 'en-US')" title="Read aloud"><i class="fas fa-volume-up"></i></button>
+      </div>
       <p style="line-height: 1.7; margin-bottom: 15px; color: var(--text-primary);">${paragraph.text}</p>
       <div class="keywords-section">
         <div class="keywords-list">
@@ -775,11 +778,11 @@ function getLikedPosts() {
 
 function toggleLike(postId) {
   let liked = getLikedPosts();
-  const index = liked.indexOf(postId);
+  const index = liked.indexOf(String(postId));
   if (index > -1) {
     liked.splice(index, 1);
   } else {
-    liked.push(postId);
+    liked.push(String(postId));
   }
   localStorage.setItem('forumLikedPosts', JSON.stringify(liked));
   renderForum();
@@ -810,10 +813,15 @@ function openComments(postId, postContent) {
   loadComments(postId);
 }
 
-function loadComments(postId) {
+function loadAllComments() {
   const saved = localStorage.getItem('forumComments');
-  const allComments = saved ? JSON.parse(saved) : {};
-  const postComments = allComments[postId] || [];
+  return saved ? JSON.parse(saved) : {};
+}
+
+function loadComments(postId) {
+  const postKey = String(postId);
+  const allComments = loadAllComments();
+  const postComments = allComments[postKey] || [];
   const container = getEl('commentsList');
   if (!container) return;
   
@@ -833,24 +841,16 @@ function postComment(postId) {
   const input = getEl('newComment');
   if (!input || !input.value.trim()) return;
   
-  const saved = localStorage.getItem('forumComments');
-  const allComments = saved ? JSON.parse(saved) : {};
-  if (!allComments[postId]) allComments[postId] = [];
+  const postKey = String(postId);
+  const allComments = loadAllComments();
+  if (!allComments[postKey]) allComments[postKey] = [];
   
   const username = localStorage.getItem('sakuraUser') || 'You';
-  allComments[postId].push({ author: username, text: input.value.trim(), time: 'Just now' });
+  allComments[postKey].push({ author: username, text: input.value.trim(), time: 'Just now' });
   localStorage.setItem('forumComments', JSON.stringify(allComments));
   
-  loadComments(postId);
+  loadComments(postKey);
   input.value = '';
-  
-  const post = forumPosts.find(p => p.author === 'Sakura_Fan' && p.content.includes('hiragana'));
-  if (post) {
-    const idx = forumPosts.indexOf(post);
-    if (idx > -1 && forumPosts[idx]) {
-      forumPosts[idx].comments++;
-    }
-  }
 }
 
 function sharePost(postId, content) {
@@ -886,6 +886,7 @@ function openCreatePost() {
   if (!content || !content.trim()) return;
   
   const newPost = {
+    id: 'user_' + Date.now(),
     author: username,
     avatar: username.charAt(0).toUpperCase(),
     time: 'Just now',
@@ -904,15 +905,17 @@ function renderForum() {
   const liked = getLikedPosts();
   const userPosts = getSavedPosts();
   const allPosts = [...userPosts, ...forumPosts];
+  const postComments = loadAllComments();
   
   container.innerHTML = `
     <button class="btn btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="openCreatePost()">
       <i class="fas fa-plus"></i> Create New Post
     </button>
   ` + allPosts.map((post, idx) => {
-    const postId = idx;
-    const isLiked = liked.includes(postId);
-    const displayLikes = post.likes + (isLiked ? 1 : 0);
+    const postId = post.id || idx;
+    const postKey = String(postId);
+    const isLiked = liked.includes(postKey);
+    const commentCount = postComments[postKey]?.length || 0;
     return `
     <div class="forum-post">
       <div class="post-header">
@@ -924,9 +927,9 @@ function renderForum() {
       </div>
       <p class="post-content">${post.content}</p>
       <div class="post-actions">
-        <button class="post-action ${isLiked ? 'active' : ''}" onclick="toggleLike(${postId})"><i class="fas fa-heart"></i> <span class="like-count">${displayLikes}</span></button>
-        <button class="post-action" onclick="openComments(${postId}, '${post.content.replace(/'/g, "\\'")}')"><i class="fas fa-comment"></i> ${post.comments}</button>
-        <button class="post-action" onclick="sharePost(${postId}, '${post.content.replace(/'/g, "\\'")}')"><i class="fas fa-share"></i> Share</button>
+        <button class="post-action ${isLiked ? 'active' : ''}" onclick="toggleLike('${postKey}')"><i class="fas fa-heart"></i> ${post.likes + (isLiked ? 1 : 0)}</button>
+        <button class="post-action" onclick="openComments('${postKey}', '${post.content.replace(/'/g, "\\'")}')"><i class="fas fa-comment"></i> ${commentCount}</button>
+        <button class="post-action" onclick="sharePost('${postKey}', '${post.content.replace(/'/g, "\\'")}')"><i class="fas fa-share"></i> Share</button>
       </div>
     </div>
   `;
