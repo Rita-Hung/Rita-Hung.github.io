@@ -419,16 +419,18 @@ function renderCourseDetail() {
   const course = courses.find(c => c.id === id);
   if (!course) return;
 
+  window.currentCourse = course;
+
   const detail = getEl('courseDetail');
   if (!detail) return;
 
   // Create story paragraphs HTML with keywords
-  const storyHTML = course.story.map(paragraph => 
-    `<div class="story-paragraph">
+  const storyHTML = course.story.map((paragraph, index) => 
+    `<div class="story-paragraph" onclick="openStoryModal(${index})" style="cursor: pointer;">
       <p style="line-height: 1.7; margin-bottom: 15px; color: var(--text-primary);">${paragraph.text}</p>
       <div class="keywords-section">
         <div class="keywords-list">
-          ${paragraph.keywords.map(keyword => `<span class="keyword-tag">${keyword}</span>`).join('')}
+          ${paragraph.keywords.map(keyword => `<span class="keyword-tag" onclick="event.stopPropagation(); openVocabModal('${keyword.replace(/'/g, "\\'")}')">${keyword}</span>`).join('')}
         </div>
       </div>
     </div>`
@@ -793,6 +795,40 @@ function showAlert(title, message, callback) {
   document.body.appendChild(overlay);
 }
 
+function speakText(text, lang = 'en-US') {
+  if ('speechSynthesis' in window) {
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang;
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    speechSynthesis.speak(utterance);
+  } else {
+    alert('Text-to-speech not supported in this browser.');
+  }
+}
+
+function stopSpeaking() {
+  if ('speechSynthesis' in window) {
+    speechSynthesis.cancel();
+  }
+}
+
+function openStoryModal(index) {
+  const course = window.currentCourse;
+  if (!course || !course.story[index]) return;
+  
+  const paragraph = course.story[index];
+  speakText(paragraph.text, 'en-US');
+}
+
+function openVocabModal(keyword) {
+  const match = keyword.match(/^(.+?)\s*\((.+?)\)$/);
+  const japanese = match ? match[1] : keyword;
+  
+  speakText(japanese, 'ja-JP');
+}
+
 function handleLogin(e) {
   e.preventDefault();
   const email = getEl('loginEmail')?.value || '';
@@ -880,4 +916,7 @@ function setActiveNav(page) {
   });
 }
 
-window.addEventListener('DOMContentLoaded', initPage);
+window.addEventListener('DOMContentLoaded', () => {
+  initPage();
+  document.addEventListener('click', stopSpeaking);
+});
